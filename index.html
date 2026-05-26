@@ -1,0 +1,2209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cook Verse | Premium Recipes & Food Blog</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #fafaf9;
+      color: #292524;
+    }
+    .serif-title {
+      font-family: 'Playfair Display', Georgia, Cambria, serif;
+    }
+    /* Hide scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="font-sans flex flex-col min-h-screen">
+
+  <!-- Secret Access Door Alert Banner -->
+  <div id="secretAlert" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-amber-950 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-amber-500/20 hidden">
+    <i data-lucide="lock" class="w-6 h-6 text-amber-500 animate-pulse"></i>
+    <div>
+      <span class="font-extrabold text-sm block id-secret-title">Secret Admin Portal Unlocked!</span>
+      <span class="text-stone-300 text-xs id-secret-desc">Redirecting you to admin login...</span>
+    </div>
+  </div>
+
+  <!-- =================== NAVBAR =================== -->
+  <header class="sticky top-0 z-45 bg-white border-b border-stone-200 shadow-sm backdrop-blur-md bg-white/95">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo (Double click secret entry) -->
+        <div id="logoBtn" class="flex items-center gap-3 cursor-pointer hover:opacity-95 select-none" title="Double-click to launch Admin Panel">
+          <div class="bg-amber-500 text-white p-2.5 rounded-xl shadow-md shadow-amber-500/10 flex items-center justify-center">
+            <i data-lucide="chef-hat" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <span class="text-2xl font-bold tracking-tight text-amber-950 flex items-center gap-1.5">
+              <span class="id-site-title">Cook Verse</span>
+            </span>
+            <span class="block text-xs text-stone-400 -mt-0.5 id-site-tagline">Premium Recipes & Food Blog</span>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="hidden lg:flex items-center gap-7 text-sm font-semibold">
+          <button onclick="navigateTo('home')" class="nav-link text-amber-600" id="navHome">Home</button>
+          
+          <!-- Categories pill dropdown list -->
+          <div class="relative group">
+            <button class="text-stone-600 hover:text-amber-500 transition-colors flex items-center gap-1">
+              <span id="navCategories">Categories</span>
+              <span class="text-[9px] bg-stone-150 text-stone-500 px-1.5 py-0.5 rounded font-bold">5</span>
+            </button>
+            <div class="absolute top-full left-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-stone-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2">
+              <button onclick="selectCategory('All')" class="w-full text-left px-3 py-2 rounded-lg text-xs text-stone-600 hover:bg-stone-50 font-semibold" id="catAll">All</button>
+              <button onclick="selectCategory('Main Courses')" class="w-full text-left px-3 py-2 rounded-lg text-xs text-stone-600 hover:bg-stone-50 font-semibold" id="catMain">Main Courses</button>
+              <button onclick="selectCategory('Desserts')" class="w-full text-left px-3 py-2 rounded-lg text-xs text-stone-600 hover:bg-stone-50 font-semibold" id="catDessert">Desserts</button>
+              <button onclick="selectCategory('Drinks')" class="w-full text-left px-3 py-2 rounded-lg text-xs text-stone-600 hover:bg-stone-50 font-semibold" id="catDrinks">Drinks</button>
+              <button onclick="selectCategory('Breakfast')" class="w-full text-left px-3 py-2 rounded-lg text-xs text-stone-600 hover:bg-stone-50 font-semibold" id="catBreakfast">Breakfast</button>
+              <button onclick="selectCategory('Appetizers')" class="w-full text-left px-3 py-2 rounded-lg text-xs text-stone-600 hover:bg-stone-50 font-semibold" id="catAppetizers">Appetizers</button>
+            </div>
+          </div>
+
+          <button onclick="navigateTo('about')" class="nav-link text-stone-600 hover:text-amber-500" id="navAbout">About Us</button>
+          <button onclick="navigateTo('privacy')" class="nav-link text-stone-600 hover:text-amber-500" id="navPrivacy">Privacy Policy</button>
+          <button onclick="navigateTo('contact')" class="nav-link text-stone-600 hover:text-amber-500" id="navContact">Contact Us</button>
+        </div>
+
+        <!-- Right actions -->
+        <div class="flex items-center gap-3">
+          <!-- Sinhala Toggle -->
+          <button onclick="toggleLanguage()" class="flex items-center gap-1 bg-stone-100 hover:bg-stone-200 text-stone-700 px-3.5 py-1.5 rounded-full text-xs font-extrabold transition">
+            <i data-lucide="globe" class="w-3.5 h-3.5 text-amber-600"></i>
+            <span id="langLabel">සිංහල</span>
+          </button>
+
+          <!-- Login Shortcut Button (Only displays if guest) -->
+          <button id="headerLoginBtn" onclick="navigateTo('admin-login')" class="border border-stone-200 text-stone-600 hover:bg-amber-50/30 hover:border-amber-300 hover:text-amber-800 px-4.5 py-2 rounded-full text-xs font-bold transition">
+            Login
+          </button>
+
+          <!-- Dashboard active session indicator -->
+          <div id="activeDashboardBtn" class="hidden">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- =================== SEARCH SUBBAR =================== -->
+  <div id="searchBarContainer" class="bg-white/90 border-b border-stone-200 py-4 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="flex flex-col md:flex-row gap-3">
+          <div class="relative flex-1">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i data-lucide="search" class="h-5 w-5 text-stone-400"></i>
+            </div>
+            <input
+              type="text"
+              id="searchInput"
+              oninput="handleSearch(this.value)"
+              onkeydown="handleSearchKey(event)"
+              class="block w-full pl-10 pr-10 py-3 border border-stone-200 rounded-2xl bg-stone-50/70 focus:bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition text-sm font-semibold"
+              placeholder="Search delicious recipes..."
+            />
+            <button
+              id="clearSearchBtn"
+              onclick="clearAllFilters()"
+              class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-stone-400 hover:text-red-600 transition"
+              title="Clear search"
+            >
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <select
+            id="searchCategorySelect"
+            onchange="handleSearchCategory(this.value)"
+            class="md:w-56 px-4 py-3 border border-stone-200 rounded-2xl bg-stone-50/70 focus:bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-sm font-bold text-stone-700"
+          >
+            <option value="All">All Categories</option>
+            <option value="Main Courses">Main Courses</option>
+            <option value="Desserts">Desserts</option>
+            <option value="Drinks">Drinks</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Appetizers">Appetizers</option>
+          </select>
+        </div>
+
+        <div id="searchMeta" class="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-stone-500">
+          <span id="searchMetaText" class="font-semibold">Showing all recipes</span>
+          <div id="searchQuickChips" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+            <button onclick="quickSearch('chicken')" class="whitespace-nowrap bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-100 px-3 py-1.5 rounded-full font-bold transition">Chicken</button>
+            <button onclick="quickSearch('cake')" class="whitespace-nowrap bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-full font-bold transition">Cake</button>
+            <button onclick="quickSearch('curry')" class="whitespace-nowrap bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-full font-bold transition">Curry</button>
+            <button onclick="quickSearch('drink')" class="whitespace-nowrap bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-full font-bold transition">Drink</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== CORE CONTAINER =================== -->
+  <main class="flex-grow">
+    
+    <!-- ADSENSE TOP LEADERBOARD (HIDDEN) -->
+    <div class="hidden" id="adsenseTopContainer"></div>
+
+    <!-- =================== 1. HOME VIEW =================== -->
+    <section id="homeView" class="view-section pb-16">
+      
+      <!-- FEATURED ROTATING HERO SLIDER -->
+      <div id="featuredSlider" class="relative bg-stone-900 overflow-hidden h-[380px] md:h-[460px]">
+        <div class="absolute inset-0">
+          <img id="slideImage" src="" alt="" class="w-full h-full object-cover opacity-55 saturate-110 transition-all duration-700 scale-105">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-900/30 to-transparent"></div>
+        </div>
+
+        <!-- Slide Text Content Box -->
+        <div class="absolute inset-0 flex flex-col justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 md:pb-16">
+          <div class="max-w-2xl text-white space-y-3">
+            <div class="inline-flex items-center gap-1 bg-amber-500 text-white px-3.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider shadow-md">
+              <i data-lucide="sparkles" class="w-3 h-3"></i>
+              <span id="slideBadge">Featured Recipes</span>
+            </div>
+            <h2 id="slideTitle" class="text-3xl md:text-5xl font-extrabold serif-title tracking-tight leading-tight">---</h2>
+            <p id="slideDesc" class="text-stone-200 text-xs md:text-sm line-clamp-2 max-w-xl">---</p>
+            
+            <!-- Specs -->
+            <div class="flex flex-wrap items-center gap-4 pt-1 text-xs text-stone-300">
+              <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i><span id="slidePrep">---</span></span>
+              <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5 text-amber-400"></i><span id="slideServings">---</span></span>
+            </div>
+
+            <div class="pt-3">
+              <button id="slideViewBtn" onclick="" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md hover:-translate-y-0.5 transition-all flex items-center gap-1">
+                <span>View Recipe</span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button onclick="rotateSlider(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-full transition z-20 backdrop-blur-sm">
+          <i data-lucide="chevron-left" class="w-5 h-5"></i>
+        </button>
+        <button onclick="rotateSlider(1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-full transition z-20 backdrop-blur-sm">
+          <i data-lucide="chevron-right" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Categories horizontal navigation bar -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+        <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200 pb-5 gap-4">
+          <div>
+            <h3 class="text-2xl font-bold text-stone-950 serif-title flex items-center gap-2" id="browseTitle">
+              <i data-lucide="utensils" class="w-5 h-5 text-amber-600"></i>
+              Browse by Category
+            </h3>
+            <p class="text-stone-400 text-xs" id="browseDesc">Select a category pill below to filter down taste results</p>
+          </div>
+
+          <!-- Pills inside container -->
+          <div id="categoryPills" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 -mx-4 px-4 md:mx-0 md:px-0">
+            <!-- Rendered dynamically via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID FEED -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div class="mb-6">
+          <h4 class="text-lg font-extrabold text-stone-900 id-feed-title">Latest Recipes</h4>
+        </div>
+
+        <!-- Recipe Grid -->
+        <div id="recipeGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Generated dynamically -->
+        </div>
+      </div>
+
+      <!-- Boost original content section for AdSense crawler -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 pt-10 border-t border-stone-200">
+        <div class="bg-amber-50/50 rounded-3xl p-8 md:p-12 border border-amber-100">
+          <h3 class="text-xl md:text-2xl font-bold text-amber-950 serif-title mb-3 id-adsense-boost-title">
+            Why Cook Verse is Your Ultimate Food & Recipe Companion
+          </h3>
+          <p class="text-stone-600 text-xs md:text-sm leading-relaxed mb-4 id-adsense-boost-desc">
+            At Cook Verse, we believe that cooking should be an accessible, joyful, and deeply rewarding experience. We curate meticulously tested blog-style recipes ranging from quick family dinners and traditional Sri Lankan spice curries to world-class decadent desserts. Every guide features real-time preparation timers, accurate portion controls, and interactive step-by-step checklists to guarantee your culinary success.
+          </p>
+          <div class="flex flex-wrap gap-4 text-xs font-bold text-amber-800">
+            <span class="bg-white px-3.5 py-1 rounded-full border border-amber-200 shadow-2xs">✔ 100% Tested Recipes</span>
+            <span class="bg-white px-3.5 py-1 rounded-full border border-amber-200 shadow-2xs">✔ Local & International Cuisines</span>
+            <span class="bg-white px-3.5 py-1 rounded-full border border-amber-200 shadow-2xs">✔ Free Culinary Guides</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =================== 2. SINGLE RECIPE DETAILS VIEW =================== -->
+    <section id="detailsView" class="view-section py-12 hidden">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Navigation header -->
+        <div class="flex items-center justify-between mb-6 mt-4">
+          <button onclick="navigateTo('home')" class="inline-flex items-center gap-1.5 text-stone-600 hover:text-amber-600 font-bold text-sm transition">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span class="id-back-recipes">Back to Recipes</span>
+          </button>
+
+          <button onclick="navigateTo('home')" class="inline-flex items-center gap-1.5 bg-stone-200/75 hover:bg-stone-200 text-stone-700 px-4.5 py-2 rounded-xl text-xs font-extrabold transition">
+            <i data-lucide="home" class="w-3.5 h-3.5"></i>
+            <span class="id-home-page">Home Page</span>
+          </button>
+        </div>
+
+        <!-- Main Card Container -->
+        <article class="bg-white rounded-3xl border border-stone-200/80 shadow-md overflow-hidden">
+          
+          <!-- Cover Photo -->
+          <div class="relative h-[280px] sm:h-[420px] w-full bg-stone-100">
+            <img id="detailsImage" src="" alt="" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <div class="absolute bottom-6 left-6 sm:left-10 right-6 text-white">
+              <span id="detailsCategory" class="inline-block bg-amber-500 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-2">Category</span>
+              <h1 id="detailsTitle" class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight serif-title max-w-3xl">Title</h1>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="px-6 sm:px-10 py-8 border-b border-stone-100 bg-amber-50/30">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+              <div class="bg-white p-4 rounded-2xl shadow-2xs border border-stone-100">
+                <span class="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1 id-label-prep">Prep Time</span>
+                <span id="detailsPrep" class="text-sm font-black text-stone-800">---</span>
+              </div>
+              <div class="bg-white p-4 rounded-2xl shadow-2xs border border-stone-100">
+                <span class="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1 id-label-servings">Servings</span>
+                <span id="detailsServings" class="text-sm font-black text-stone-800">---</span>
+              </div>
+              <div class="bg-white p-4 rounded-2xl shadow-2xs border border-stone-100">
+                <span class="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1 id-label-difficulty">Difficulty</span>
+                <span id="detailsDifficulty" class="text-sm font-black text-stone-800">---</span>
+              </div>
+              <div class="bg-white p-4 rounded-2xl shadow-2xs border border-stone-100">
+                <span class="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1 id-label-published">Published</span>
+                <span id="detailsPublished" class="text-xs font-bold text-stone-700 block mt-1">---</span>
+              </div>
+            </div>
+
+            <div class="mt-8 max-w-3xl">
+              <p id="detailsDescription" class="text-stone-600 text-sm md:text-base leading-relaxed italic">---</p>
+            </div>
+          </div>
+
+          <!-- Instructions & Ingredients -->
+          <div class="px-6 sm:px-10 py-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
+            
+            <!-- Ingredients Column -->
+            <div class="lg:col-span-5 space-y-5">
+              <h3 class="text-xl font-extrabold text-stone-950 serif-title border-b border-amber-200 pb-3 flex items-center gap-2">
+                <div class="w-2 h-5 bg-amber-500 rounded"></div>
+                <span class="id-label-ingredients">Ingredients</span>
+              </h3>
+              <div id="detailsIngredientsList" class="space-y-3 bg-stone-50/50 p-5 rounded-2xl border border-stone-200/60">
+                <!-- Generated dynamically -->
+              </div>
+            </div>
+
+            <!-- Preparation Steps Column -->
+            <div class="lg:col-span-7 space-y-5">
+              <h3 class="text-xl font-extrabold text-stone-950 serif-title border-b border-amber-200 pb-3 flex items-center gap-2">
+                <div class="w-2 h-5 bg-amber-500 rounded"></div>
+                <span class="id-label-steps">Preparation Steps</span>
+              </h3>
+              <div id="detailsStepsList" class="space-y-5">
+                <!-- Generated dynamically -->
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+      </div>
+    </section>
+
+    <!-- =================== 3A. ABOUT US VIEW =================== -->
+    <section id="aboutView" class="view-section py-12 hidden">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl border border-stone-200/80 p-8 md:p-12 shadow-sm space-y-6">
+          <div class="border-b border-stone-200 pb-6">
+            <span class="text-xs font-extrabold text-amber-600 uppercase tracking-widest block mb-1 id-about-badge">Our Story</span>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-stone-950 serif-title id-about-title">About Cook Verse</h1>
+          </div>
+          <div id="aboutTextContent" class="space-y-4 text-stone-600 text-sm md:text-base leading-relaxed whitespace-pre-line">
+            <!-- Dynamic Pages Text -->
+          </div>
+
+          <div class="pt-8 border-t border-stone-100 flex items-center justify-between">
+            <button onclick="navigateTo('contact')" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-xl text-xs font-extrabold transition id-contact-us-btn">Contact Us</button>
+            <button onclick="navigateTo('home')" class="text-stone-500 hover:text-stone-850 text-xs font-bold transition id-back-btn">Back to Home</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== 3B. PRIVACY POLICY VIEW =================== -->
+    <section id="privacyView" class="view-section py-12 hidden">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl border border-stone-200/80 p-8 md:p-12 shadow-sm space-y-6">
+          <div class="border-b border-stone-200 pb-6">
+            <span class="text-xs font-extrabold text-amber-600 tracking-widest block mb-1 uppercase id-privacy-badge">Legal & Compliance</span>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-stone-950 serif-title id-privacy-title">Privacy Policy</h1>
+            <p class="text-xs text-stone-400 mt-1">Last Updated: January 2026</p>
+          </div>
+          <div id="privacyTextContent" class="space-y-4 text-stone-600 text-xs md:text-sm leading-relaxed whitespace-pre-line font-mono">
+            <!-- Dynamic Pages Text -->
+          </div>
+          <div class="pt-4">
+            <button onclick="navigateTo('home')" class="bg-stone-900 hover:bg-stone-800 text-white px-6 py-2.5 rounded-xl text-xs font-extrabold transition id-privacy-close-btn">I Understand & Accept</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== 3C. TERMS OF SERVICE VIEW =================== -->
+    <section id="termsView" class="view-section py-12 hidden">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl border border-stone-200/80 p-8 md:p-12 shadow-sm space-y-6">
+          <div class="border-b border-stone-200 pb-6">
+            <span class="text-xs font-extrabold text-amber-600 uppercase tracking-widest block mb-1 id-terms-badge">User Agreement</span>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-stone-950 serif-title id-terms-title">Terms of Service & Disclaimer</h1>
+          </div>
+          <div id="termsTextContent" class="space-y-4 text-stone-600 text-xs md:text-sm leading-relaxed whitespace-pre-line">
+            <!-- Dynamic Pages Text -->
+          </div>
+          <div class="pt-4">
+            <button onclick="navigateTo('home')" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-xs font-extrabold transition id-terms-close-btn">Return Home</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== 3D. CONTACT US VIEW =================== -->
+    <section id="contactView" class="view-section py-12 hidden">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl border border-stone-200/80 p-8 md:p-12 shadow-sm space-y-8">
+          
+          <div class="text-center space-y-2">
+            <div class="bg-amber-505 bg-amber-500/10 text-amber-700 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto">
+              <i data-lucide="mail" class="w-6 h-6"></i>
+            </div>
+            <h1 class="text-3xl font-extrabold text-stone-950 serif-title id-contact-title">Contact Cook Verse</h1>
+            <p id="contactTextContent" class="text-stone-500 text-xs max-w-md mx-auto whitespace-pre-line">---</p>
+          </div>
+
+          <!-- Contact Success Box -->
+          <div id="contactSuccessAlert" class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center space-y-2 hidden">
+            <i data-lucide="check-circle" class="w-8 h-8 text-emerald-600 mx-auto"></i>
+            <h3 class="font-bold text-emerald-950 text-sm">Message Submitted Successfully!</h3>
+            <p class="text-emerald-700 text-xs">Our administrator team will review your inquiry and reply shortly.</p>
+          </div>
+
+          <form id="contactForm" onsubmit="submitContactForm(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-stone-700 mb-1">Your Name *</label>
+                <input type="text" required class="block w-full px-4 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-xs" placeholder="e.g. Jane Doe">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-stone-700 mb-1">Email Address *</label>
+                <input type="email" required class="block w-full px-4 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-xs" placeholder="e.g. jane@example.com">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Subject *</label>
+              <select required class="block w-full px-4 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-xs">
+                <option value="Inquiry">General Inquiry</option>
+                <option value="Partnership">Business Partnership</option>
+                <option value="Recipe">Recipe Feedback</option>
+                <option value="AdSense">Advertising / AdSense Questions</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Your Message *</label>
+              <textarea required rows="4" class="block w-full px-4 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-xs" placeholder="Describe your message here..."></textarea>
+            </div>
+            <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl text-xs transition flex items-center justify-center gap-2">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>Send Message</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== 4. LOGIN VIEW =================== -->
+    <section id="adminLoginView" class="view-section py-16 hidden">
+      <div class="max-w-md mx-auto px-4">
+        <div class="bg-white rounded-3xl border border-stone-200/80 shadow-xl p-8 space-y-6">
+          
+          <div class="text-center space-y-2">
+            <div class="bg-amber-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mx-auto shadow-md">
+              <i data-lucide="lock" class="w-6 h-6"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-stone-950 serif-title id-login-title">Login</h2>
+            <p class="text-stone-400 text-xs id-login-desc">Sign in to your account</p>
+          </div>
+
+          <div id="loginErrorBlock" class="bg-red-50 border-l-4 border-red-500 p-3 rounded-lg text-xs text-red-700 font-semibold hidden"></div>
+
+          <!-- Hidden Tip Box (For Developer reference, but hidden from UI) -->
+          <div class="hidden">
+            <code id="currentAdminPassTip">admin123</code>
+          </div>
+
+          <form onsubmit="submitAdminLogin(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-stone-600 uppercase mb-1">Email Address</label>
+              <input type="email" id="loginEmail" required class="block w-full px-4 py-2.5 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/25 focus:border-amber-500 bg-stone-50 text-xs transition" placeholder="e.g. user@example.com">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-600 uppercase mb-1">Password</label>
+              <input type="password" id="loginPassword" required class="block w-full px-4 py-2.5 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/25 focus:border-amber-500 bg-stone-50 text-xs transition" placeholder="••••••••">
+            </div>
+            <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl text-xs transition shadow-lg shadow-amber-500/20 mt-6">Login</button>
+          </form>
+
+          <div class="pt-4 border-t border-stone-100 text-center">
+            <button onclick="navigateTo('home')" class="inline-flex items-center gap-1 text-stone-500 hover:text-stone-800 text-xs font-bold transition">
+              <i data-lucide="home" class="w-3.5 h-3.5"></i>
+              <span>Home Page</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== 5. ADMIN DASHBOARD VIEW =================== -->
+    <section id="adminDashboardView" class="view-section py-12 hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        
+        <!-- Admin Top Navigation Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-stone-200 pb-6 gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="bg-amber-500/10 text-amber-800 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Authenticated Session</span>
+              <span class="text-xs text-stone-400 font-mono">admin@cookverse.com</span>
+            </div>
+            <h2 class="text-3xl font-black text-stone-950 serif-title tracking-tight mt-1 id-dash-title">Admin Management Dashboard</h2>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button onclick="navigateTo('home')" class="inline-flex items-center gap-1.5 bg-white border border-stone-200 hover:bg-stone-50 text-stone-700 px-4.5 py-2 rounded-xl text-xs font-bold shadow-xs transition">
+              <i data-lucide="home" class="w-3.5 h-3.5"></i>
+              <span>Home Page</span>
+            </button>
+            <button onclick="openAddRecipeModal()" class="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white px-4.5 py-2 rounded-xl text-xs font-bold shadow-md hover:-translate-y-0.5 transition-all">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span class="id-add-recipe-label">Add New Recipe</span>
+            </button>
+            <button onclick="logoutAdmin()" class="inline-flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-700 px-4.5 py-2 rounded-xl text-xs font-bold transition">
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats Widgets -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white border border-stone-200/80 rounded-2xl p-6 flex items-center gap-5 shadow-xs">
+            <div class="p-3 rounded-2xl bg-amber-500/10 text-amber-700 flex-shrink-0">
+              <i data-lucide="utensils" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold text-stone-400 uppercase tracking-wider">Total Recipes</span>
+              <span id="statTotalRecipes" class="text-3xl font-black text-stone-900 block">0</span>
+            </div>
+          </div>
+
+          <div class="bg-white border border-stone-200/80 rounded-2xl p-6 flex items-center gap-5 shadow-xs">
+            <div class="p-3 rounded-2xl bg-amber-500/10 text-amber-700 flex-shrink-0">
+              <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold text-stone-400 uppercase tracking-wider">Featured Recipes</span>
+              <span id="statFeaturedRecipes" class="text-3xl font-black text-stone-900 block">0</span>
+            </div>
+          </div>
+
+          <div class="bg-white border border-stone-200/80 rounded-2xl p-6 flex items-center gap-5 shadow-xs">
+            <div class="p-3 rounded-2xl bg-amber-500/10 text-amber-700 flex-shrink-0">
+              <i data-lucide="globe" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-semibold text-stone-400 uppercase tracking-wider">Bilingual Status</span>
+              <span class="text-xs font-bold text-emerald-600 block mt-1">English + සිංහල (Active)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Table Grid & Change Password Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Recipes List (8 Cols) -->
+          <div class="lg:col-span-8 bg-white border border-stone-200 rounded-2xl shadow-xs overflow-hidden">
+            <div class="px-6 py-4 border-b border-stone-200 bg-stone-50">
+              <h3 class="font-extrabold text-stone-900 text-xs uppercase tracking-wider">Manage Recipes Database</h3>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse text-left">
+                <thead>
+                  <tr class="border-b border-stone-200 bg-stone-50/50 text-[10px] text-stone-400 uppercase font-semibold">
+                    <th class="px-6 py-3">Recipe</th>
+                    <th class="px-6 py-3">Category</th>
+                    <th class="px-6 py-3">Prep Info</th>
+                    <th class="px-6 py-3 text-center">Featured</th>
+                    <th class="px-6 py-3 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="recipesTableBody" class="divide-y divide-stone-200 text-xs">
+                  <!-- Generated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Password Change (4 Cols) -->
+          <div class="lg:col-span-4 bg-white border border-stone-200 rounded-2xl shadow-xs p-6 space-y-4">
+            <div class="flex items-center gap-2 border-b border-stone-100 pb-3">
+              <i data-lucide="key-round" class="w-5 h-5 text-amber-600"></i>
+              <h3 class="font-extrabold text-stone-950 text-xs uppercase tracking-wider">Change Password</h3>
+            </div>
+
+            <!-- Password Status Banner -->
+            <div id="passwordChangeSuccess" class="bg-emerald-50 border-l-4 border-emerald-500 p-3 rounded-lg text-xs text-emerald-800 font-medium hidden"></div>
+            <div id="passwordChangeError" class="bg-red-50 border-l-4 border-red-500 p-3 rounded-lg text-xs text-red-800 font-medium hidden"></div>
+
+            <form onsubmit="submitChangePassword(event)" class="space-y-3">
+              <div>
+                <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1">Current Password</label>
+                <input type="password" id="currPassInput" required class="block w-full px-3 py-2 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-xs">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1">New Password</label>
+                <input type="password" id="newPassInput" required class="block w-full px-3 py-2 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-xs" placeholder="Min 4 characters">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-stone-500 uppercase mb-1">Confirm New Password</label>
+                <input type="password" id="confirmPassInput" required class="block w-full px-3 py-2 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-xs">
+              </div>
+              <button type="submit" class="w-full bg-stone-950 hover:bg-stone-800 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5 mt-2">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                <span>Update Password</span>
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- Dynamic Legal Pages Editor Block -->
+        <div class="bg-white border border-stone-200 rounded-2xl shadow-xs p-6 md:p-8 space-y-6">
+          <div class="flex items-center justify-between border-b border-stone-100 pb-4">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="file-text" class="w-6 h-6 text-amber-600"></i>
+              <div>
+                <h3 class="font-extrabold text-stone-955 text-lg serif-title">Site Pages Content Manager</h3>
+                <p class="text-[11px] text-stone-400">Update About, Privacy, Terms, and Contact page texts dynamically to maintain fresh AdSense compliance.</p>
+              </div>
+            </div>
+            <div id="pagesSaveSuccessAlert" class="bg-emerald-100 text-emerald-800 px-3.5 py-1 rounded-full text-xs font-bold hidden">Saved Successfully!</div>
+          </div>
+
+          <form onsubmit="submitPagesContent(event)" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              
+              <!-- ABOUT US -->
+              <div class="bg-stone-50/65 p-5 rounded-2xl border border-stone-200/60 space-y-3">
+                <h4 class="font-extrabold text-stone-900 text-xs uppercase tracking-wider border-b border-stone-200 pb-1.5 flex items-center justify-between">
+                  <span>About Us Page</span>
+                </h4>
+                <div>
+                  <label class="block text-[9px] font-bold text-stone-500 uppercase mb-1">English</label>
+                  <textarea id="editAboutEn" rows="3" class="w-full p-2 border border-stone-250 rounded-xl text-xs font-sans"></textarea>
+                </div>
+                <div>
+                  <label class="block text-[9px] font-bold text-stone-500 uppercase mb-1">සිංහල</label>
+                  <textarea id="editAboutSi" rows="3" class="w-full p-2 border border-stone-250 rounded-xl text-xs font-sans"></textarea>
+                </div>
+              </div>
+
+              <!-- PRIVACY POLICY -->
+              <div class="bg-stone-50/65 p-5 rounded-2xl border border-stone-200/60 space-y-3">
+                <h4 class="font-extrabold text-stone-900 text-xs uppercase tracking-wider border-b border-stone-200 pb-1.5 flex items-center justify-between">
+                  <span>Privacy Policy</span>
+                </h4>
+                <div>
+                  <label class="block text-[9px] font-bold text-stone-500 uppercase mb-1">English</label>
+                  <textarea id="editPrivacyEn" rows="3" class="w-full p-2 border border-stone-250 rounded-xl text-xs font-sans"></textarea>
+                </div>
+                <div>
+                  <label class="block text-[9px] font-bold text-stone-500 uppercase mb-1">සිංහල</label>
+                  <textarea id="editPrivacySi" rows="3" class="w-full p-2 border border-stone-250 rounded-xl text-xs font-sans"></textarea>
+                </div>
+              </div>
+
+              <!-- TERMS OF SERVICE -->
+              <div class="bg-stone-50/65 p-5 rounded-2xl border border-stone-200/60 space-y-3">
+                <h4 class="font-extrabold text-stone-900 text-xs uppercase tracking-wider border-b border-stone-200 pb-1.5 flex items-center justify-between">
+                  <span>Terms of Service</span>
+                </h4>
+                <div>
+                  <label class="block text-[9px] font-bold text-stone-500 uppercase mb-1">English</label>
+                  <textarea id="editTermsEn" rows="3" class="w-full p-2 border border-stone-250 rounded-xl text-xs font-sans"></textarea>
+                </div>
+                <div>
+                  <label class="block text-[9px] font-bold text-stone-500 uppercase mb-1">සිංහල</label>
+                  <textarea id="editTermsSi" rows="3" class="w-full p-2 border border-stone-250 rounded-xl text-xs font-sans"></textarea>
+                </div>
+              </div>
+
+              <!-- CONTACT -->
+              <div class="bg-stone-50/65 p-5 rounded-2xl border border-stone-200/60 space-y-3">
+                <h4 class="font-extrabold text-stone-900 text-xs uppercase tracking-wider border-b border-stone-200 pb-1.5 flex items-center justify-between">
+                  <span>Contact Us Description</span>
+                </h4>
+                <div>
+                  <label class="block text-[9px] font-bold text-stone-500 uppercase mb-1">English</label>
+                  <textarea id="editContactEn" rows="3" class="w-full p-2 border border-stone-250 rounded-xl text-xs font-sans"></textarea>
+                </div>
+                <div>
+                  <label class="block text-[9px] font-bold text-stone-500 uppercase mb-1">සිංහල</label>
+                  <textarea id="editContactSi" rows="3" class="w-full p-2 border border-stone-250 rounded-xl text-xs font-sans"></textarea>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="pt-4 border-t border-stone-100 flex justify-end">
+              <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-8 py-3 rounded-xl text-xs transition shadow-md flex items-center gap-1.5">
+                <i data-lucide="check" class="w-4 h-4"></i>
+                <span>Save & Update All Pages Content</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================== FOOTER =================== -->
+  <footer class="bg-stone-950 text-stone-400 py-12 border-t border-stone-900 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+      
+      <!-- Brand -->
+      <div class="space-y-4 md:col-span-1">
+        <span class="text-xl font-bold tracking-tight text-white flex items-center gap-2 select-none">
+          <div class="bg-amber-500 text-white p-1.5 rounded-lg">
+            <i data-lucide="chef-hat" class="w-4 h-4"></i>
+          </div>
+          <span class="id-site-title">Cook Verse</span>
+        </span>
+        <p class="text-stone-500 text-xs leading-relaxed font-sans id-footer-brand">
+          Cook Verse is a gorgeous, blog-style modern recipe portal containing the absolute best culinary masterpieces, cocktails, appetizers, and desserts.
+        </p>
+        <div class="text-xs text-stone-600 font-mono flex items-center gap-1.5 flex-wrap">
+          <span>© 2026 Cook Verse Inc.</span>
+          <!-- Hidden door 2 -->
+          <span onclick="handleSecretTrigger()" class="w-2 h-2 rounded-full bg-stone-900 hover:bg-amber-500/40 cursor-pointer transition-colors" title="Secret Portal Door"></span>
+        </div>
+      </div>
+
+      <!-- Quick Category Links -->
+      <div class="space-y-3">
+        <h5 class="text-xs font-extrabold text-white uppercase tracking-wider id-footer-categories">Popular Categories</h5>
+        <div class="flex flex-col gap-2 text-xs">
+          <button onclick="selectCategory('Main Courses')" class="text-left text-stone-500 hover:text-amber-500 transition">Main Courses</button>
+          <button onclick="selectCategory('Desserts')" class="text-left text-stone-500 hover:text-amber-500 transition">Desserts</button>
+          <button onclick="selectCategory('Drinks')" class="text-left text-stone-500 hover:text-amber-500 transition">Drinks</button>
+          <button onclick="selectCategory('Breakfast')" class="text-left text-stone-500 hover:text-amber-500 transition">Breakfast</button>
+        </div>
+      </div>
+
+      <!-- Legal Policies -->
+      <div class="space-y-3">
+        <h5 class="text-xs font-extrabold text-white uppercase tracking-wider flex items-center gap-1">
+          <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-500"></i>
+          <span id="id-footer-legal">Legal & Policies</span>
+        </h5>
+        <div class="flex flex-col gap-2 text-xs">
+          <button onclick="navigateTo('about')" class="text-left text-stone-500 hover:text-amber-500 transition font-medium">About Us</button>
+          <button onclick="navigateTo('privacy')" class="text-left text-stone-500 hover:text-amber-500 transition font-medium">Privacy Policy</button>
+          <button onclick="navigateTo('terms')" class="text-left text-stone-500 hover:text-amber-500 transition font-medium">Terms of Service</button>
+          <button onclick="navigateTo('contact')" class="text-left text-stone-500 hover:text-amber-500 transition font-medium">Contact Us</button>
+        </div>
+      </div>
+
+      <!-- Languages switcher -->
+      <div class="space-y-3">
+        <h5 class="text-xs font-extrabold text-white uppercase tracking-wider">Bilingual Settings</h5>
+        <p class="text-stone-500 text-xs leading-relaxed" id="langHelp">
+          You can browse Cook Verse in either English or Sinhala using the toggle button in the top header.
+        </p>
+
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- =================== ADSENSE COOKIE CONSENT BANNER =================== -->
+  <div id="cookieConsentBanner" class="fixed bottom-0 left-0 right-0 z-50 bg-stone-900 text-white border-t border-stone-800 shadow-2xl p-4 md:p-5 hidden">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-start gap-3">
+        <div class="bg-amber-500/20 text-amber-400 p-2 rounded-xl flex-shrink-0 mt-0.5">
+          <i data-lucide="info" class="w-5 h-5"></i>
+        </div>
+        <div class="space-y-1">
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-wider block id-cookie-title">Privacy & Cookie Policy Notice</span>
+          <p class="text-xs text-stone-300 leading-relaxed max-w-3xl id-cookie-desc">
+            We use cookies to personalize content and analyze our traffic. By clicking "Accept & Continue", you consent to our use of cookies and agree to our Privacy Policy.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto justify-end">
+        <button onclick="navigateTo('privacy')" class="px-3 py-2 text-xs text-stone-400 hover:text-white underline transition">Read Policy</button>
+        <button onclick="acceptCookieConsent()" class="bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-md whitespace-nowrap id-cookie-btn">Accept & Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== MODAL: ADD / EDIT RECIPE =================== -->
+  <div id="addEditModal" class="fixed inset-0 z-50 overflow-y-auto bg-stone-950/70 backdrop-blur-xs items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl border border-stone-200 shadow-2xl max-w-4xl w-full overflow-hidden flex flex-col max-h-[90vh]">
+      
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
+        <div class="flex items-center gap-2">
+          <i data-lucide="file-text" class="w-5 h-5 text-amber-500"></i>
+          <h3 id="addEditModalTitle" class="font-bold text-stone-955 serif-title text-lg">Add New Recipe</h3>
+        </div>
+        <button onclick="closeAddRecipeModal()" class="p-1.5 rounded-full hover:bg-stone-200 text-stone-400 hover:text-stone-600 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <form onsubmit="submitSaveRecipe(event)" class="p-6 overflow-y-auto space-y-6 flex-grow">
+        <input type="hidden" id="formRecipeId">
+        
+        <!-- Section 1: English -->
+        <div class="bg-stone-50/50 p-4.5 rounded-2xl border border-stone-200/60 space-y-4">
+          <h4 class="text-xs font-extrabold text-stone-500 uppercase tracking-wider">1. English Content (Required)</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Title *</label>
+              <input type="text" id="formTitle" required class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs" placeholder="e.g., Tuscan Garlic Chicken">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Category *</label>
+              <select id="formCategory" required class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs bg-white">
+                <option value="Main Courses">Main Courses</option>
+                <option value="Desserts">Desserts</option>
+                <option value="Drinks">Drinks</option>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Appetizers">Appetizers</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-stone-700 mb-1">Short Description *</label>
+            <textarea id="formDescription" required rows="2" class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs" placeholder="A mouth-watering description..."></textarea>
+          </div>
+        </div>
+
+        <!-- Section 2: Sinhala -->
+        <div class="bg-amber-50/20 p-4.5 rounded-2xl border border-amber-200/30 space-y-4">
+          <h4 class="text-xs font-extrabold text-amber-800 uppercase tracking-wider">2. Sinhala Content (Optional)</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Sinhala Title</label>
+              <input type="text" id="formTitleSi" class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs" placeholder="උදා: ක්‍රීමි සුදුලූනු කුකුළු මස්">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Sinhala Category Name</label>
+              <input type="text" id="formCategorySi" class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs" placeholder="උදා: ප්‍රධාන ආහාර වේල්">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-stone-700 mb-1">Sinhala Short Description</label>
+            <textarea id="formDescriptionSi" rows="2" class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs" placeholder="ආහාරය පිළිබඳව කෙටි විස්තරය..."></textarea>
+          </div>
+        </div>
+
+        <!-- Section 3: Logistics -->
+        <div class="bg-stone-50/50 p-4.5 rounded-2xl border border-stone-200/60 space-y-4">
+          <h4 class="text-xs font-extrabold text-stone-500 uppercase tracking-wider">3. Image & Specs</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Upload Recipe Photo (පින්තූරය අප්ලෝඩ් කරන්න)</label>
+              <div class="flex items-center gap-3 bg-white p-3 rounded-xl border border-stone-200">
+                <input type="file" id="formImageFile" accept="image/*" onchange="handleLocalImageUpload(event)" class="hidden">
+                <button type="button" onclick="document.getElementById('formImageFile').click()" class="bg-stone-950 hover:bg-stone-850 text-white px-4 py-2 rounded-lg text-xs font-bold transition">
+                  Choose File
+                </button>
+                <span id="formImageFileName" class="text-xs text-stone-400 truncate max-w-[150px]">No file chosen</span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Or Paste Photo Image URL (හෝ ලින්ක් එක ඇතුළත් කරන්න)</label>
+              <input type="url" id="formImage" class="block w-full px-3.5 py-3 border border-stone-200 rounded-xl text-xs bg-white" placeholder="https://images.unsplash.com/photo-...">
+            </div>
+          </div>
+          
+          <!-- Thumbnail Preview Element -->
+          <div id="formImagePreviewContainer" class="hidden items-center gap-3 bg-amber-50 border border-amber-100 p-3 rounded-xl">
+            <img id="formImagePreview" src="" alt="Upload Preview" class="w-12 h-12 object-cover rounded-lg border border-amber-200">
+            <div class="text-[11px]">
+              <span class="font-bold text-amber-950 block">Image Preview ready</span>
+              <span class="text-stone-400">Will be saved to database on submission</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Prep Time *</label>
+              <input type="text" id="formPrepTime" required class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs" placeholder="e.g., 30 mins">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Servings *</label>
+              <input type="text" id="formServings" required class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs" placeholder="e.g., 4 servings">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Difficulty *</label>
+              <div class="flex gap-2">
+                <select id="formDifficulty" class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs bg-white">
+                  <option value="Easy">Easy</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Hard">Hard</option>
+                </select>
+                <input type="text" id="formDifficultySi" class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs" placeholder="පහසු">
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 py-1.5">
+            <input type="checkbox" id="formFeatured" class="rounded border-stone-300 text-amber-600 focus:ring-amber-500/20 w-4 h-4 cursor-pointer">
+            <label for="formFeatured" class="text-xs font-bold text-stone-700 cursor-pointer select-none">Set as Featured Recipe (appears in home page slider)</label>
+          </div>
+        </div>
+
+        <!-- Section 4: Ingredients -->
+        <div class="bg-stone-50/50 p-4.5 rounded-2xl border border-stone-200/60 space-y-4">
+          <h4 class="text-xs font-extrabold text-stone-500 uppercase tracking-wider">4. Ingredients (One item per line)</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Ingredients (English) *</label>
+              <textarea id="formIngredients" required rows="4" class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs font-mono" placeholder="2 large chicken breasts&#10;1 tbsp olive oil"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Ingredients (Sinhala)</label>
+              <textarea id="formIngredientsSi" rows="4" class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs font-mono" placeholder="කුකුළු මස් ග්‍රෑම් 500&#10;ඔලිව් තෙල් මේස හැඳි 1"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 5: Instructions -->
+        <div class="bg-stone-50/50 p-4.5 rounded-2xl border border-stone-200/60 space-y-4">
+          <h4 class="text-xs font-extrabold text-stone-500 uppercase tracking-wider">5. Preparation Steps (One step per line)</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Instructions (English) *</label>
+              <textarea id="formInstructions" required rows="4" class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs font-mono" placeholder="Season chicken breasts.&#10;Cook on skillet until golden."></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-stone-700 mb-1">Instructions (Sinhala)</label>
+              <textarea id="formInstructionsSi" rows="4" class="block w-full px-3.5 py-2 border border-stone-200 rounded-xl text-xs font-mono" placeholder="කුකුළු මස් වලට ලුණු එකතු කරන්න.&#10;රන්වන් පාට වනතුරු බදින්න්න."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer buttons -->
+        <div class="pt-4 border-t border-stone-200 flex items-center justify-end gap-3 bg-white sticky bottom-0">
+          <button type="button" onclick="closeAddRecipeModal()" class="px-5 py-2.5 rounded-xl text-stone-600 hover:bg-stone-100 text-xs font-bold transition">Cancel</button>
+          <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition shadow-md">Save Recipe</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- =================== MODAL: DELETE CONFIRMATION (FIXED & WORKING) =================== -->
+  <div id="deleteConfirmModal" class="fixed inset-0 z-50 overflow-y-auto bg-stone-950/60 backdrop-blur-xs items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl border border-stone-200/80 shadow-2xl max-w-md w-full overflow-hidden p-6 space-y-5">
+      <div class="flex items-start gap-4">
+        <div class="bg-red-50 text-red-600 p-3 rounded-2xl flex-shrink-0">
+          <i data-lucide="trash-2" class="w-6 h-6"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-extrabold text-stone-955 text-lg serif-title id-delete-confirm-title">Confirm Recipe Deletion</h3>
+          <p class="text-stone-400 text-xs id-delete-confirm-msg">Are you sure you want to permanently delete this recipe?</p>
+        </div>
+      </div>
+
+      <div class="bg-stone-50 border border-stone-200/60 p-4 rounded-2xl flex items-center gap-3 text-xs">
+        <img id="deleteConfirmImage" src="" alt="" class="w-12 h-12 object-cover rounded-lg">
+        <div>
+          <span id="deleteConfirmTitle" class="font-bold text-stone-800 block">Recipe Title</span>
+          <span id="deleteConfirmMeta" class="text-stone-400 text-[10px]">Category • 30 mins</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button type="button" onclick="closeDeleteModal()" class="px-4 py-2.5 rounded-xl text-stone-500 hover:bg-stone-100 text-xs font-bold transition id-delete-cancel-btn">Cancel</button>
+        <button type="button" onclick="executeDeleteRecipe()" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md transition id-delete-execute-btn">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       CORE PURE JAVASCRIPT APP LOGIC (VANILLA JS)
+       ========================================== -->
+  <script>
+    // --- Core Mock Data ---
+    const DEFAULT_RECIPES = [
+      {
+        _id: 'rec_1',
+        title: 'Creamy Tuscan Garlic Chicken',
+        titleSi: 'ක්‍රීමි ටස්කන් සුදුලූනු කුකුළු මස්',
+        description: 'Tender chicken breasts simmered in a rich, creamy garlic sauce with spinach and sun-dried tomatoes.',
+        descriptionSi: 'තක්කාලි, නිවිති සහ පොහොසත් ක්‍රීම් සුදුලූනු සෝස් සමඟ පිසින ලද රසවත් කුකුළු මස්.',
+        image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=800&q=80',
+        category: 'Main Courses',
+        categorySi: 'ප්‍රධාන ආහාර වේල්',
+        prepTime: '30 mins',
+        servings: '4 servings',
+        difficulty: 'Medium',
+        difficultySi: 'මධ්‍යම',
+        featured: true,
+        ingredients: [
+          '2 large chicken breasts, halved lengthwise',
+          '1 tbsp olive oil',
+          '1 cup heavy cream',
+          '1/2 cup chicken broth',
+          '1 tsp garlic powder',
+          '1 cup fresh baby spinach',
+          '1/2 cup sun-dried tomatoes, chopped',
+          '1/2 cup grated Parmesan cheese',
+          '3 cloves garlic, minced'
+        ],
+        ingredientsSi: [
+          'තීරු වලට කපාගත් කුකුළු මස් ග්‍රෑම් 500',
+          'ඔලිව් තෙල් මේස හැඳි 1',
+          'පොල්කිරි හෝ හෙවි ක්‍රීම් කෝප්ප 1',
+          'කුකුළු මස් සුප් හොද්ද (Broth) කෝප්ප 1/2',
+          'සුදුලූනු කුඩු තේ හැඳි 1',
+          'නැවුම් නිවිති කොළ කෝප්ප 1',
+          'වියළි තක්කාලි කෝප්ප 1/2',
+          'ගාගත් පාමසන් චීස් කෝප්ප 1/2',
+          'හීනියට කපාගත් සුදුලූනු බික් 3'
+        ],
+        instructions: [
+          'Season chicken breasts with salt, pepper, and garlic powder.',
+          'Heat olive oil in a large skillet over medium-high heat and sear chicken for 5 minutes each side until golden.',
+          'Remove chicken. In the same skillet, add minced garlic and sauté for 1 minute.',
+          'Add chicken broth, heavy cream, and garlic powder. Bring to a simmer.',
+          'Stir in spinach, sun-dried tomatoes, and Parmesan cheese. Let spinach wilt.',
+          'Return chicken to the skillet and spoon the sauce over it. Simmer for 3-5 minutes until cooked through.'
+        ],
+        instructionsSi: [
+          'කුකුළු මස් වලට ලුණු, ගම්මිරිස් සහ සුදුලූනු කුඩු එකතු කර පදම් කරගන්න.',
+          'තාච්චියකට ඔලිව් තෙල් දමා රත් වූ පසු කුකුළු මස් දෙපැත්ත රන්වන් පාට වනතුරු විනාඩි 5 බැගින් බදින්න.',
+          'කුකුළු මස් ඉවත් කර, එම තාච්චියටම කපාගත් සුදුලූනු එකතු කර විනාඩියක් තෙම්පරාදු කරන්න.',
+          'එයට සුප් හොද්ද, ක්‍රීම් හෝ ඝන පොල්කිරි සහ සුදුලූනු කුඩු එකතු කර නටවා ගන්න.',
+          'එයට නිවිති කොළ, වියළි තක්කාලි සහ චීස් එකතු කර හොඳින් කලවම් කරන්න.',
+          'දැන් බැදගත් කුකුළු මස් නැවත එයට එකතු කර සෝස් එක උකු වනතුරු විනාඩි 3-5ක් පිසගන්න.'
+        ],
+        createdAt: new Date(Date.now() - 86400000 * 3).toISOString()
+      },
+      {
+        _id: 'rec_2',
+        title: 'Molten Chocolate Lava Cake',
+        titleSi: 'ලාවා චොකලට් කේක්',
+        description: 'Decadent chocolate cake with a warm, gooey liquid chocolate center. A luxurious restaurant-quality dessert.',
+        descriptionSi: 'මැදින් දියවන උණුසුම් චොකලට් සෝස් සහිත උසස් ප්‍රමිතියේ රසවත් චොකලට් කේක් එකක්.',
+        image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80',
+        category: 'Desserts',
+        categorySi: 'අතුරුපස',
+        prepTime: '20 mins',
+        servings: '2 servings',
+        difficulty: 'Medium',
+        difficultySi: 'මධ්‍යම',
+        featured: true,
+        ingredients: [
+          '1/2 cup high-quality semi-sweet chocolate chips',
+          '1/4 cup unsalted butter',
+          '1 whole egg + 1 egg yolk',
+          '2 tbsp granulated sugar',
+          '1 tbsp all-purpose flour',
+          '1 tsp vanilla extract',
+          'Pinch of salt'
+        ],
+        ingredientsSi: [
+          'හොඳ තත්ත්වයේ චොකලට් චිප්ස් කෝප්ප 1/2',
+          'ලුණු රහිත බටර් කෝප්ප 1/4',
+          'බිත්තර 1 සහ බිත්තර කහ මද 1',
+          'සීනි මේස හැඳි 2',
+          'පාන් පිටි මේස හැඳි 1',
+          'වැනිලා සාරය තේ හැඳි 1',
+          'ලුණු ස්වල්පයක්'
+        ],
+        instructions: [
+          'Preheat oven to 425°F (218°C). Grease two small ramekins with butter and cocoa powder.',
+          'Melt chocolate chips and butter together in a microwave-safe bowl in 20-second bursts, stirring until smooth.',
+          'In a separate bowl, whisk egg, egg yolk, sugar, vanilla, and salt until light and pale.',
+          'Gently fold the melted chocolate and flour into the egg mixture until just combined.',
+          'Divide batter evenly between the ramekins.',
+          'Bake for 12-14 minutes until the edges are firm but the centers are still soft and jiggly. Let cool for 1 minute, then invert onto plates.'
+        ],
+        instructionsSi: [
+          'පෝරණය සෙල්සියස් අංශක 218 කට රත් කරන්න. බඳුන් දෙකක් ගෙන බටර් සහ කොකෝවා කුඩු ස්වල්පයක් තවරා ගන්න.',
+          'චොකලට් සහ බටර් එකට දියකර ගන්න (Microwave හෝ ඩබල් බොයිලර් ක්‍රමයට).',
+          'වෙනත් බඳුනක බිත්තර, බිත්තර කහ මදය, සීනි, වැනිලා සහ ලුණු හොඳින් ගසා ගන්න.',
+          'දියකරගත් චොකලට් සහ පිටි බිත්තර මිශ්‍රණයට එකතු කර මෘදුව කලවම් කරන්න.',
+          'මිශ්‍රණය සකස් කරගත් බඳුන් දෙකට සමානව බෙදා හරින්න.',
+          'විනාඩි 12-14 ක් පුළුස්සා ගන්න. වට ප්‍රමාණය තද වී මැද සෙලවෙන තත්ත්වයේ තිබිය යුතුය. විනාඩියක් නිවෙන්න හැර පිඟානකට මුඩු කරන්න.'
+        ],
+        createdAt: new Date(Date.now() - 86400000 * 2).toISOString()
+      },
+      {
+        _id: 'rec_3',
+        title: 'Spiced Sri Lankan Chicken Curry',
+        titleSi: 'ශ්‍රී ලාංකේය ක්‍රමයට සැර කුකුළු මස් කරිය',
+        description: 'A rich, deeply flavorful coconut-based curry packed with traditional Sri Lankan spices, lemongrass, and pandan leaves.',
+        descriptionSi: 'පොල්කිරි, රම්පේ, කරපිංචා සහ සාම්ප්‍රදායික කුළුබඩු එක්කර සාදන ලද සුවඳවත් රසවත් කුකුළු මස් කරියක්.',
+        image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80',
+        category: 'Main Courses',
+        categorySi: 'ප්‍රධාන ආහාර වේල්',
+        prepTime: '45 mins',
+        servings: '6 servings',
+        difficulty: 'Hard',
+        difficultySi: 'අපහසු',
+        featured: true,
+        ingredients: [
+          '1 kg chicken pieces, bone-in',
+          '2 tbsp Sri Lankan roasted curry powder',
+          '1 tsp chili powder',
+          '1/2 tsp turmeric powder',
+          '1 cup thick coconut milk',
+          '1 cup thin coconut milk',
+          '1 large onion, chopped',
+          '2 sprigs of curry leaves & 2-inch pandan leaf',
+          '1 tbsp ginger-garlic paste',
+          '2-inch cinnamon stick & 3 cardamom pods'
+        ],
+        ingredientsSi: [
+          'කැබලි කපාගත් කුකුළු මස් කිලෝග්‍රෑම් 1',
+          'බැදපු තුනපහ කුඩු මේස හැඳි 2',
+          'මිරිස් කුඩු තේ හැඳි 1',
+          'කහ කුඩු තේ හැඳි 1/2',
+          'මිටිකිරි කෝප්ප 1',
+          'දියකිරි කෝප්ප 1',
+          'රතු ලූනු හෝ බොම්බායි ලූනු 1',
+          'කරපිංචා ඉති 2ක් සහ රම්පේ කොළයක්',
+          'ඉඟුරු-සුදුලූනු පේස්ට් මේස හැඳි 1',
+          'කුරුඳු පොතු කැබැල්ලක් සහ කරාබුනැටි 3'
+        ],
+        instructions: [
+          'Marinate chicken with curry powder, chili powder, turmeric, ginger-garlic paste, and salt for 30 minutes.',
+          'Heat oil in a large clay pot or deep pan. Add onions, curry leaves, pandan leaf, cinnamon, and cardamoms. Sauté until fragrant.',
+          'Add the marinated chicken and stir fry for about 5-8 minutes until the chicken turns white.',
+          'Pour in the thin coconut milk, cover, and simmer on medium heat for 20 minutes.',
+          'Remove cover, add the thick coconut milk, and simmer on low heat for another 10 minutes until the gravy is rich and dark red.'
+        ],
+        instructionsSi: [
+          'කුකුළු මස් වලට තුනපහ කුඩු, මිරිස් කුඩු, කහ, ඉඟුරු-සුදුලූනු සහ ලුණු එකතු කර විනාඩි 30ක් පදම් වෙන්න තබන්න.',
+          'භාජනයකට තෙල් දමා රත් වූ පසු ලූනු, කරපිංචා, රම්පේ, කුරුඳු පොතු සහ කරාබුනැටි එකතු කර රන්වන් පාට වනතුරු තෙම්පරාදු කරන්න.',
+          'පදම් කරගත් කුකුළු මස් එකතු කර විනාඩි 5-8ක් තෙලෙන් බැදෙන්න හැරෙන්න.',
+          'දියකිරි එකතු කර, වසා මධ්‍යම ගින්දරේ විනාඩි 20ක් පිසගන්න.',
+          'පසුව මිටිකිරි එකතු කර පියන විවෘතව තබා මද ගින්නේ තවත් විනාඩි 10ක් හොද්ද උකු වනතුරු පිසගන්න.'
+        ],
+        createdAt: new Date(Date.now() - 86400000 * 5).toISOString()
+      }
+    ];
+
+    const DEFAULT_PAGES = {
+      aboutEn: "Welcome to Cook Verse, your premium digital sanctuary for outstanding food, tested recipes, and joyful culinary adventures. Founded with the simple mission of uniting home cooks with foolproof, accessible, and highly delicious recipes, we aim to transform everyday ingredients into extraordinary meals.\n\nWe believe that anyone can cook masterfully given clear instructions and tested guidelines. We double-test all our original recipes in real home kitchens to make sure your results are consistently perfect. From rich Tuscan chicken and authentic Sri Lankan spiced curries to molten lava cakes, our digital library is fully free and accessible to the global community.",
+      aboutSi: "කුක් වර්ස් (Cook Verse) යනු ආහාර පිසීමට ආදරය කරන, නව රහස්‍ය වට්ටෝරු සොයන සහ පවුලේ සැමට පෝෂ්‍යදායී ආහාර වේලක් ලබාදීමට කැමති ඔබ වෙනුවෙන්ම නිර්මාණය වූ සුවිශේෂී ආහාර බ්ලොග් අඩවියකි.\n\nඅපගේ ප්‍රධාන අරමුණ වන්නේ සාම්ප්‍රදායික ශ්‍රී ලාංකේය ආහාර මෙන්ම ජාත්‍යන්තර මට්ටමේ ප්‍රධාන ආහාර වේල්, අතුරුපස සහ බීම වර්ග ඉතා සරල පියවර ඔස්සේ ඔබට කියා දීමයි. සෑම වට්ටෝරුවක්ම අපගේ කණ්ඩායම විසින් පෞද්ගලිකව පරීක්ෂා කර, නිවැරදිම අමුද්‍රව්‍ය ප්‍රමාණ සහ කාල සීමාවන් සමඟ ඉදිරිපත් කර ඇත.",
+      privacyEn: "At Cook Verse, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Cook Verse and how we use it. If you have additional questions or require more information, do not hesitate to contact us.\n\nWe use cookies to optimize user experiences, customize layouts, and analyze our traffic safely.",
+      privacySi: "අපගේ වෙබ් අඩවිය භාවිතා කරන ඔබගේ පෞද්ගලිකත්වයට අප ඉහළම ප්‍රමුඛතාවයක් ලබා දෙන්නෙමු. වෙබ් අඩවියේ අත්දැකීම් වඩාත් සතුටුදායක කරවීම සඳහා අප කුකීස් (Cookies) භාවිතා කරනු ලබයි. ඔබට අවශ්‍ය නම් බ්‍රව්සරයේ සැකසුම් මගින් මෙම කුකීස් අක්‍රිය කළ හැක.",
+      termsEn: "By accessing and using Cook Verse, you accept and agree to be bound by the terms and provision of this agreement. All content included on this site, such as recipe texts, graphics, logos, and instructions, is the property of Cook Verse.\n\nThe recipes and information provided here are for educational and informational purposes only. Always consult a medical professional regarding severe food allergies or specific dietary requirements.",
+      termsSi: "මෙම වෙබ් අඩවියේ ඇති සියලුම ආහාර වට්ටෝරු සහ තොරතුරු හුදෙක් ඔබගේ දැනුම සහ අධ්‍යාපනික අරමුණු සඳහා පමණක් ලබා දී ඇත. යම් ආහාරයක අසාත්මිකතා (Food Allergies) හෝ විශේෂ සෞඛ්‍ය තත්ත්වයන් තිබේ නම්, කරුණාකර වෛද්‍ය උපදෙස් ලබාගන්න. අඩවියේ ඇති අන්තර්ගතයන් අනවසරයෙන් උපුටා ගැනීම තහනම් වේ.",
+      contactEn: "Have a question about a recipe, business partnership, or inquiries? Fill out the form or contact us at: mithunmenaka692@gmail.com. Colombo, Sri Lanka.",
+      contactSi: "ඔබට අපගේ වට්ටෝරු පිළිබඳව යම් ගැටලුවක්, අදහසක් හෝ විමසීමක් කිරීමට ඇත්නම් කරුණාකර පෝරමය පුරවා අප වෙත එවන්න. විද්‍යුත් තැපෑල: mithunmenaka692@gmail.com"
+    };
+
+    // --- Translation Dictionary ---
+    const langDict = {
+      en: {
+        siteTitle: "Cook Verse",
+        siteTagline: "Premium Recipes & Food Blog",
+        navHome: "Home",
+        navCategories: "Categories",
+        navAbout: "About Us",
+        navPrivacy: "Privacy Policy",
+        navContact: "Contact Us",
+        searchPlaceholder: "Search delicious recipes...",
+        featuredTitle: "Featured Recipes",
+        browseTitle: "Browse by Category",
+        browseDesc: "Select a category pill below to filter down taste results",
+        latestRecipes: "Latest Recipes",
+        viewRecipe: "View Recipe",
+        prepTime: "Prep Time",
+        servings: "Servings",
+        difficulty: "Difficulty",
+        ingredients: "Ingredients",
+        instructions: "Preparation Steps",
+        backToRecipes: "Back to Recipes",
+        homeBtn: "Home Page",
+        aboutBadge: "Our Story",
+        privacyBadge: "Legal & Compliance",
+        termsBadge: "User Agreement",
+        contactTitle: "Contact Cook Verse",
+        footerBrand: "Cook Verse is a gorgeous, blog-style modern recipe portal containing the absolute best culinary masterpieces, cocktails, appetizers, and desserts.",
+        footerLegal: "Legal & Policies",
+        langLabel: "සිංහල",
+        cookieTitle: "Privacy & Cookie Policy Notice",
+        cookieDesc: "We use cookies to personalize content and analyze our traffic. By clicking 'Accept & Continue', you consent to our use of cookies and agree to our Privacy Policy.",
+        cookieBtn: "Accept & Continue",
+        categories: {
+          All: "All",
+          "Main Courses": "Main Courses",
+          Desserts: "Desserts",
+          Drinks: "Drinks",
+          Breakfast: "Breakfast",
+          Appetizers: "Appetizers"
+        }
+      },
+      si: {
+        siteTitle: "කුක් වර්ස්",
+        siteTagline: "ප්‍රමුඛ පෙළේ රසවත් කෑම වට්ටෝරු සහ බ්ලොග් අඩවිය",
+        navHome: "මුල් පිටුව",
+        navCategories: "ප්‍රවර්ග",
+        navAbout: "අප ගැන",
+        navPrivacy: "රහස්‍යතා ප්‍රතිපත්තිය",
+        navContact: "සම්බන්ධ වන්න",
+        searchPlaceholder: "රසවත් වට්ටෝරු සොයන්න...",
+        featuredTitle: "සුවිශේෂී වට්ටෝරු",
+        browseTitle: "ප්‍රවර්ගය අනුව සොයන්න",
+        browseDesc: "පිඟන් මෙනුව සහ ආහාර වට්ටෝරු වර්ග තෝරා පෙරන්න",
+        latestRecipes: "අලුත්ම වට්ටෝරු",
+        viewRecipe: "වට්ටෝරුව බලන්න",
+        prepTime: "පිළියෙල කිරීමට",
+        servings: "පිළිගැන්වීම්",
+        difficulty: "අපහසුතාවය",
+        ingredients: "අවශ්‍ය අමුද්‍රව්‍ය",
+        instructions: "පිළියෙල කිරීමේ පියවර",
+        backToRecipes: "නැවත වට්ටෝරු වෙත",
+        homeBtn: "මුල් පිටුවට",
+        aboutBadge: "අපගේ කතාව",
+        privacyBadge: "නෛතික සහ රහස්‍යතා තොරතුරු",
+        termsBadge: "භාවිතයේ නීති",
+        contactTitle: "අප හා සම්බන්ධ වන්න",
+        footerBrand: "කුක් වර්ස් යනු අතිවිශිෂ්ට සහ සුවිශේෂී ගෘහස්ථ ආහාර වට්ටෝරු ලෝකයටම ගෙන එන සුවිශේෂී වෙබ් අඩවියකි.",
+        footerLegal: "නෛතික පිටු",
+        langLabel: "English",
+        cookieTitle: "කුකීස් භාවිතය පිළිබඳ එකඟතාවය",
+        cookieDesc: "අපගේ වෙබ් අඩවියේ අත්දැකීම තවදුරටත් වර්ධනය කිරීම සඳහා අප කුකීස් භාවිතා කරනු ලබයි. වෙබ් අඩවිය තවදුරටත් භාවිතා කිරීමෙන් ඔබ අපගේ රහස්‍යතා ප්‍රතිපත්තියට එකඟ වේ.",
+        cookieBtn: "මම එකඟ වෙමි",
+        categories: {
+          All: "සියල්ල",
+          "Main Courses": "ප්‍රධාන ආහාර වේල්",
+          Desserts: "අතුරුපස",
+          Drinks: "බීම වර්ග",
+          Breakfast: "උදෑසන ආහාරය",
+          Appetizers: "අතුරු ආහාර වේල්"
+        }
+      }
+    };
+
+    // --- Global App State ---
+    let recipes = [];
+    let pagesContent = {};
+    let currentView = 'home';
+    let selectedCategory = 'All';
+    let searchQuery = '';
+    let currentLang = 'en'; // 'en' or 'si'
+    let adminToken = localStorage.getItem('cookverse_jwt') || null;
+    let sliderIndex = 0;
+    let recipeToDeleteId = null;
+
+    // --- Initialize Database ---
+    function initDb() {
+      if (!localStorage.getItem('cookverse_recipes')) {
+        localStorage.setItem('cookverse_recipes', JSON.stringify(DEFAULT_RECIPES));
+      }
+      if (!localStorage.getItem('cookverse_pages')) {
+        localStorage.setItem('cookverse_pages', JSON.stringify(DEFAULT_PAGES));
+      }
+      if (!localStorage.getItem('cookverse_admin')) {
+        localStorage.setItem('cookverse_admin', JSON.stringify({
+          email: 'admin@cookverse.com',
+          passwordHash: 'admin123'
+        }));
+      }
+
+      recipes = JSON.parse(localStorage.getItem('cookverse_recipes'));
+      pagesContent = JSON.parse(localStorage.getItem('cookverse_pages'));
+    }
+
+    // --- Save DB changes ---
+    function saveRecipesDb() {
+      localStorage.setItem('cookverse_recipes', JSON.stringify(recipes));
+    }
+
+    function savePagesDb() {
+      localStorage.setItem('cookverse_pages', JSON.stringify(pagesContent));
+    }
+
+    // --- Translation Helper ---
+    function t(key, subkey = null) {
+      const d = langDict[currentLang];
+      if (subkey) return d[key][subkey] || langDict['en'][key][subkey];
+      return d[key] || langDict['en'][key];
+    }
+
+    function getTransText(en, si) {
+      return (currentLang === 'si' && si) ? si : en;
+    }
+
+    // --- Update UI Translations ---
+    function renderLanguageUI() {
+      // Update all text elements with specific keys
+      document.querySelectorAll('[class*="id-"]').forEach(el => {
+        const className = Array.from(el.classList).find(c => c.startsWith('id-'));
+        if (!className) return;
+        
+        const key = className.replace('id-', '');
+        
+        // Custom switch mappings
+        if (key === 'site-title') el.textContent = t('siteTitle');
+        else if (key === 'site-tagline') el.textContent = t('siteTagline');
+        else if (key === 'back-recipes') el.textContent = t('backToRecipes');
+        else if (key === 'home-page') el.textContent = t('homeBtn');
+        else if (key === 'about-badge') el.textContent = t('aboutBadge');
+        else if (key === 'about-title') el.textContent = t('aboutBadge') + ' ' + t('siteTitle');
+        else if (key === 'privacy-badge') el.textContent = t('privacyBadge');
+        else if (key === 'privacy-title') el.textContent = t('navPrivacy');
+        else if (key === 'terms-badge') el.textContent = t('termsBadge');
+        else if (key === 'terms-title') el.textContent = t('termsBadge');
+        else if (key === 'contact-title') el.textContent = t('contactTitle');
+        else if (key === 'footer-brand') el.textContent = t('footerBrand');
+        else if (key === 'footer-categories') el.textContent = t('browseTitle');
+        else if (key === 'cookie-title') el.textContent = t('cookieTitle');
+        else if (key === 'cookie-desc') el.textContent = t('cookieDesc');
+        else if (key === 'cookie-btn') el.textContent = t('cookieBtn');
+        else if (key === 'feed-title') el.textContent = searchQuery ? (currentLang === 'si' ? `සෙවුම් ප්‍රතිඵල: "${searchQuery}"` : `Search Results: "${searchQuery}"`) : t('latestRecipes');
+        else if (key === 'dash-title') el.textContent = currentLang === 'si' ? 'පාලක කළමනාකරණ පැනලය' : 'Admin Management Dashboard';
+        else if (key === 'add-recipe-label') el.textContent = currentLang === 'si' ? 'නව වට්ටෝරුවක් එක් කරන්න' : 'Add New Recipe';
+        else if (key === 'login-title') el.textContent = currentLang === 'si' ? 'පාලක පිවිසුම (Admin Login)' : 'Admin Dashboard Login';
+        else if (key === 'login-desc') el.textContent = currentLang === 'si' ? 'පාලක පැනලයට ඇතුල්වීම සීමා කර ඇත.' : 'Secure portal. Only authorized admin credentials accepted.';
+        else if (key === 'secret-title') el.textContent = currentLang === 'si' ? 'පාලක පිවිසුම් ද්වාරය විවෘත විය!' : 'Secret Portal Doorway Opened!';
+        else if (key === 'secret-desc') el.textContent = currentLang === 'si' ? 'පාලක පිවිසුම් පෝරමය වෙත රැගෙන යයි...' : 'Redirecting you to admin login...';
+        else if (key === 'delete-confirm-title') el.textContent = currentLang === 'si' ? 'වට්ටෝරුව මැකීමට තහවුරු කරන්න' : 'Confirm Recipe Deletion';
+        else if (key === 'delete-confirm-msg') el.textContent = currentLang === 'si' ? 'ඔබට විශ්වාසද මෙම වට්ටෝරුව මැකීමට අවශ්‍ය බව?' : 'Are you sure you want to permanently delete this recipe?';
+        else if (key === 'delete-cancel-btn') el.textContent = currentLang === 'si' ? 'අවලංගු කරන්න' : 'Cancel';
+        else if (key === 'delete-execute-btn') el.textContent = currentLang === 'si' ? 'ඔව්, මකන්න' : 'Yes, Delete';
+      });
+
+      // Static links
+      document.getElementById('navHome').textContent = t('navHome');
+      document.getElementById('navCategories').textContent = t('navCategories');
+      document.getElementById('navAbout').textContent = t('navAbout');
+      document.getElementById('navPrivacy').textContent = t('navPrivacy');
+      document.getElementById('navContact').textContent = t('navContact');
+      document.getElementById('langLabel').textContent = t('langLabel');
+      document.getElementById('searchInput').placeholder = t('searchPlaceholder');
+      renderSearchCategorySelect();
+      renderSearchQuickChips();
+      document.getElementById('browseTitle').innerHTML = `<i data-lucide="utensils" class="w-5 h-5 text-amber-600"></i>${t('browseTitle')}`;
+      document.getElementById('browseDesc').textContent = t('browseDesc');
+
+      // Details labels
+      document.querySelector('.id-label-prep').textContent = t('prepTime');
+      document.querySelector('.id-label-servings').textContent = t('servings');
+      document.querySelector('.id-label-difficulty').textContent = t('difficulty');
+      document.querySelector('.id-label-ingredients').textContent = t('ingredients');
+      document.querySelector('.id-label-steps').textContent = t('instructions');
+
+      // Footer Legal title
+      document.getElementById('id-footer-legal').textContent = t('footerLegal');
+
+      // Categories selector pills
+      renderCategoryPills();
+      
+      // Re-render feeds
+      renderRecipesGrid();
+      renderFeaturedSlider();
+      
+      // Policies Pages
+      renderPageContents();
+
+      // Re-parse Lucide Icons
+      lucide.createIcons();
+    }
+
+    // --- Toggle Language ---
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'si' : 'en';
+      renderLanguageUI();
+    }
+
+    // --- Navigation System ---
+    function navigateTo(view) {
+      currentView = view;
+      
+      // Hide all sections
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+      
+      // Map hyphenated names to matching element IDs
+      let elementId = `${view}View`;
+      if (view === 'admin-login') elementId = 'adminLoginView';
+      if (view === 'admin-dashboard') elementId = 'adminDashboardView';
+      
+      // Show active view section
+      const targetElement = document.getElementById(elementId);
+      if (targetElement) {
+        targetElement.classList.remove('hidden');
+      } else {
+        console.error("View element not found:", elementId);
+      }
+
+      // Toggle Subbar and Adsense Header
+      if (view === 'home') {
+        document.getElementById('searchBarContainer').classList.remove('hidden');
+        document.getElementById('adsenseTopContainer').classList.remove('hidden');
+      } else {
+        document.getElementById('searchBarContainer').classList.add('hidden');
+        document.getElementById('adsenseTopContainer').classList.add('hidden');
+      }
+
+      // Handle nav active highlights
+      document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('text-amber-600', 'font-bold'));
+      if (view === 'home') document.getElementById('navHome').classList.add('text-amber-600', 'font-bold');
+      if (view === 'about') document.getElementById('navAbout').classList.add('text-amber-600', 'font-bold');
+      if (view === 'privacy') document.getElementById('navPrivacy').classList.add('text-amber-600', 'font-bold');
+      if (view === 'contact') document.getElementById('navContact').classList.add('text-amber-600', 'font-bold');
+
+      // Populate pages & dashboard states
+      if (view === 'admin-dashboard') {
+        verifyAdminSession();
+        renderAdminDashboard();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    // --- Trigger Secret Portal Gateway ---
+    function handleSecretTrigger() {
+      const alertEl = document.getElementById('secretAlert');
+      alertEl.classList.remove('hidden');
+      setTimeout(() => {
+        alertEl.classList.add('hidden');
+        navigateTo('admin-login');
+      }, 1600);
+    }
+
+    // --- Verification of Session ---
+    function verifyAdminSession() {
+      if (!adminToken) {
+        navigateTo('admin-login');
+        const errBlock = document.getElementById('loginErrorBlock');
+        errBlock.textContent = currentLang === 'si' ? 'පාලක පැනලය වෙත පිවිසීමට කරුණාකර ලොග් වන්න.' : 'Please log in as Admin to access the Dashboard.';
+        errBlock.classList.remove('hidden');
+      }
+    }
+
+    // --- Dual Logins (Admin & Normal Users) ---
+    function submitAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPassword').value.trim();
+      const errBlock = document.getElementById('loginErrorBlock');
+
+      errBlock.classList.add('hidden');
+
+      const adminData = JSON.parse(localStorage.getItem('cookverse_admin'));
+      
+      if (adminData.email.toLowerCase() === email.toLowerCase() && adminData.passwordHash === pass) {
+        // 1. Logged in as administrator
+        adminToken = 'mock_jwt_session_' + btoa(JSON.stringify({ email, role: 'admin', exp: Date.now() + 3600000 * 12 }));
+        localStorage.setItem('cookverse_jwt', adminToken);
+        localStorage.removeItem('cookverse_user_session'); // Clear normal user session
+        
+        updateAuthUI();
+        navigateTo('admin-dashboard');
+        
+        // Clean inputs
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
+      } else {
+        // 2. Logged in as normal user (Any other valid email format with pass length >= 4)
+        if (email.includes('@') && pass.length >= 4) {
+          localStorage.setItem('cookverse_user_session', email);
+          localStorage.removeItem('cookverse_jwt'); // Clear admin token
+          adminToken = null;
+          
+          updateAuthUI();
+          navigateTo('home');
+          
+          // Show user success welcome alert
+          showUserWelcomeAlert(email);
+          
+          // Clean inputs
+          document.getElementById('loginEmail').value = '';
+          document.getElementById('loginPassword').value = '';
+        } else {
+          errBlock.textContent = currentLang === 'si' 
+            ? 'වැරදි විද්‍යුත් තැපෑලක් හෝ මුරපදයක් (අවම අකුරු 4ක්) ඇතුළත් කරන්න!' 
+            : 'Please enter a valid email and password (minimum 4 characters).';
+          errBlock.classList.remove('hidden');
+        }
+      }
+    }
+
+    function showUserWelcomeAlert(email) {
+      const alertEl = document.getElementById('secretAlert');
+      const titleEl = alertEl.querySelector('.id-secret-title');
+      const descEl = alertEl.querySelector('.id-secret-desc');
+      
+      titleEl.textContent = currentLang === 'si' ? 'සාර්ථකව ලොග් විය!' : 'Logged In Successfully!';
+      descEl.textContent = currentLang === 'si' ? `පිළිගනිමු, ${email}` : `Welcome, ${email}`;
+      
+      alertEl.classList.remove('hidden');
+      setTimeout(() => {
+        alertEl.classList.add('hidden');
+      }, 3000);
+    }
+
+    function logoutAdmin() {
+      adminToken = null;
+      localStorage.removeItem('cookverse_jwt');
+      localStorage.removeItem('cookverse_user_session');
+      updateAuthUI();
+      navigateTo('home');
+    }
+
+    function updateAuthUI() {
+      const activeDashboardBtn = document.getElementById('activeDashboardBtn');
+      const headerLoginBtn = document.getElementById('headerLoginBtn');
+      const userSessionEmail = localStorage.getItem('cookverse_user_session');
+      
+      if (adminToken) {
+        if (headerLoginBtn) headerLoginBtn.classList.add('hidden');
+        activeDashboardBtn.innerHTML = `
+          <div class="flex items-center gap-2">
+            <button onclick="navigateTo('admin-dashboard')" class="bg-emerald-600 text-white px-3.5 py-2 rounded-full text-xs font-bold flex items-center gap-1 shadow-xs hover:bg-emerald-700">
+              <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+              <span>Dashboard</span>
+            </button>
+            <button onclick="logoutAdmin()" class="bg-stone-100 hover:bg-red-50 hover:text-red-600 text-stone-600 p-2 rounded-full transition" title="Logout">
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+        activeDashboardBtn.classList.remove('hidden');
+      } else if (userSessionEmail) {
+        if (headerLoginBtn) headerLoginBtn.classList.add('hidden');
+        activeDashboardBtn.innerHTML = `
+          <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-full px-3 py-1 shadow-2xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs font-bold text-amber-950 truncate max-w-[120px]">${userSessionEmail}</span>
+            <button onclick="logoutAdmin()" class="text-stone-400 hover:text-red-600 transition p-1" title="Logout">
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        `;
+        activeDashboardBtn.classList.remove('hidden');
+      } else {
+        if (headerLoginBtn) headerLoginBtn.classList.remove('hidden');
+        activeDashboardBtn.innerHTML = '';
+        activeDashboardBtn.classList.add('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    // --- Password Change Execution ---
+    function submitChangePassword(e) {
+      e.preventDefault();
+      const curr = document.getElementById('currPassInput').value;
+      const newP = document.getElementById('newPassInput').value;
+      const conf = document.getElementById('confirmPassInput').value;
+      const successEl = document.getElementById('passwordChangeSuccess');
+      const errorEl = document.getElementById('passwordChangeError');
+
+      successEl.classList.add('hidden');
+      errorEl.classList.add('hidden');
+
+      if (newP !== conf) {
+        errorEl.textContent = currentLang === 'si' ? 'නව මුරපද දෙක එකිනෙකට නොගැලපේ.' : 'New passwords do not match.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      const adminData = JSON.parse(localStorage.getItem('cookverse_admin'));
+      if (adminData.passwordHash !== curr) {
+        errorEl.textContent = currentLang === 'si' ? 'වත්මන් මුරපදය වැරදියි.' : 'Current password is incorrect.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      adminData.passwordHash = newP;
+      localStorage.setItem('cookverse_admin', JSON.stringify(adminData));
+
+      // Update Tip Box text dynamically
+      document.getElementById('currentAdminPassTip').textContent = newP;
+
+      successEl.textContent = currentLang === 'si' ? 'මුරපදය සාර්ථකව යාවත්කාලීන කරන ලදි!' : 'Password successfully updated!';
+      successEl.classList.remove('hidden');
+
+      // Reset fields
+      document.getElementById('currPassInput').value = '';
+      document.getElementById('newPassInput').value = '';
+      document.getElementById('confirmPassInput').value = '';
+    }
+
+    // --- Dynamic Legal Pages render & edit ---
+    function renderPageContents() {
+      document.getElementById('aboutTextContent').textContent = getTransText(pagesContent.aboutEn, pagesContent.aboutSi);
+      document.getElementById('privacyTextContent').textContent = getTransText(pagesContent.privacyEn, pagesContent.privacySi);
+      document.getElementById('termsTextContent').textContent = getTransText(pagesContent.termsEn, pagesContent.termsSi);
+      document.getElementById('contactTextContent').textContent = getTransText(pagesContent.contactEn, pagesContent.contactSi);
+    }
+
+    function populatePagesEditor() {
+      document.getElementById('editAboutEn').value = pagesContent.aboutEn;
+      document.getElementById('editAboutSi').value = pagesContent.aboutSi;
+      document.getElementById('editPrivacyEn').value = pagesContent.privacyEn;
+      document.getElementById('editPrivacySi').value = pagesContent.privacySi;
+      document.getElementById('editTermsEn').value = pagesContent.termsEn;
+      document.getElementById('editTermsSi').value = pagesContent.termsSi;
+      document.getElementById('editContactEn').value = pagesContent.contactEn;
+      document.getElementById('editContactSi').value = pagesContent.contactSi;
+    }
+
+    function submitPagesContent(e) {
+      e.preventDefault();
+      pagesContent.aboutEn = document.getElementById('editAboutEn').value;
+      pagesContent.aboutSi = document.getElementById('editAboutSi').value;
+      pagesContent.privacyEn = document.getElementById('editPrivacyEn').value;
+      pagesContent.privacySi = document.getElementById('editPrivacySi').value;
+      pagesContent.termsEn = document.getElementById('editTermsEn').value;
+      pagesContent.termsSi = document.getElementById('editTermsSi').value;
+      pagesContent.contactEn = document.getElementById('editContactEn').value;
+      pagesContent.contactSi = document.getElementById('editContactSi').value;
+
+      savePagesDb();
+      renderPageContents();
+
+      const successBanner = document.getElementById('pagesSaveSuccessAlert');
+      successBanner.classList.remove('hidden');
+      setTimeout(() => successBanner.classList.add('hidden'), 4000);
+    }
+
+    // --- Contact Form trigger ---
+    function submitContactForm(e) {
+      e.preventDefault();
+      document.getElementById('contactForm').classList.add('hidden');
+      document.getElementById('contactSuccessAlert').classList.remove('hidden');
+    }
+
+    // --- Cookie Policy Accept ---
+    function acceptCookieConsent() {
+      localStorage.setItem('cookverse_cookie_consent', 'true');
+      document.getElementById('cookieConsentBanner').classList.add('hidden');
+    }
+
+    // --- Category Selection ---
+    function selectCategory(cat) {
+      selectedCategory = cat;
+      navigateTo('home');
+    }
+
+    // --- Live Search Handler ---
+    function handleSearch(val) {
+      searchQuery = val.trim();
+      updateSearchControls();
+      renderRecipesGrid();
+    }
+
+    function handleSearchKey(event) {
+      if (event.key === 'Escape') {
+        clearAllFilters();
+      }
+    }
+
+    function handleSearchCategory(cat) {
+      selectedCategory = cat;
+      renderCategoryPills();
+      updateSearchControls();
+      renderRecipesGrid();
+    }
+
+    function quickSearch(term) {
+      searchQuery = term;
+      document.getElementById('searchInput').value = term;
+      updateSearchControls();
+      renderRecipesGrid();
+      document.getElementById('searchInput').focus();
+    }
+
+    function renderSearchCategorySelect() {
+      const select = document.getElementById('searchCategorySelect');
+      if (!select) return;
+      const categories = ['All', 'Main Courses', 'Desserts', 'Drinks', 'Breakfast', 'Appetizers'];
+      select.innerHTML = categories.map(cat => {
+        const label = cat === 'All'
+          ? (currentLang === 'si' ? 'සියලු ප්‍රවර්ග' : 'All Categories')
+          : t('categories', cat);
+        return `<option value="${cat}">${label}</option>`;
+      }).join('');
+      select.value = selectedCategory;
+    }
+
+    function renderSearchQuickChips() {
+      const container = document.getElementById('searchQuickChips');
+      if (!container) return;
+      const chips = currentLang === 'si'
+        ? [
+            { label: 'චිකන්', term: 'chicken', style: 'bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-100' },
+            { label: 'කේක්', term: 'cake', style: 'bg-stone-100 hover:bg-stone-200 text-stone-700' },
+            { label: 'කරිය', term: 'curry', style: 'bg-stone-100 hover:bg-stone-200 text-stone-700' },
+            { label: 'බීම', term: 'drink', style: 'bg-stone-100 hover:bg-stone-200 text-stone-700' }
+          ]
+        : [
+            { label: 'Chicken', term: 'chicken', style: 'bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-100' },
+            { label: 'Cake', term: 'cake', style: 'bg-stone-100 hover:bg-stone-200 text-stone-700' },
+            { label: 'Curry', term: 'curry', style: 'bg-stone-100 hover:bg-stone-200 text-stone-700' },
+            { label: 'Drink', term: 'drink', style: 'bg-stone-100 hover:bg-stone-200 text-stone-700' }
+          ];
+
+      container.innerHTML = chips.map(chip => `
+        <button onclick="quickSearch('${chip.term}')" class="whitespace-nowrap ${chip.style} px-3 py-1.5 rounded-full font-bold transition">
+          ${chip.label}
+        </button>
+      `).join('');
+    }
+
+    function updateSearchControls(resultCount = null) {
+      const clearBtn = document.getElementById('clearSearchBtn');
+      const metaText = document.getElementById('searchMetaText');
+      const select = document.getElementById('searchCategorySelect');
+      const feedTitle = document.querySelector('.id-feed-title');
+      const hasActiveFilter = Boolean(searchQuery) || selectedCategory !== 'All';
+
+      if (clearBtn) {
+        clearBtn.classList.toggle('hidden', !hasActiveFilter);
+      }
+      if (select) {
+        select.value = selectedCategory;
+      }
+      if (feedTitle) {
+        feedTitle.textContent = searchQuery
+          ? (currentLang === 'si' ? `සෙවුම් ප්‍රතිඵල: "${searchQuery}"` : `Search Results: "${searchQuery}"`)
+          : t('latestRecipes');
+      }
+      if (metaText) {
+        const countText = resultCount === null
+          ? ''
+          : (currentLang === 'si' ? `${resultCount} වට්ටෝරු` : `${resultCount} recipes`);
+        const categoryText = selectedCategory === 'All'
+          ? (currentLang === 'si' ? 'සියලු ප්‍රවර්ග' : 'all categories')
+          : t('categories', selectedCategory);
+        const searchText = searchQuery
+          ? (currentLang === 'si' ? `"${searchQuery}" සඳහා` : `for "${searchQuery}"`)
+          : (currentLang === 'si' ? 'සියලුම සෙවුම් සඳහා' : 'for all searches');
+        metaText.textContent = resultCount === null
+          ? (currentLang === 'si' ? 'වට්ටෝරු සොයන්න' : 'Search recipes by title, category, ingredients, or steps')
+          : (currentLang === 'si' ? `${countText} පෙන්වයි - ${categoryText} - ${searchText}` : `Showing ${countText} in ${categoryText} ${searchText}`);
+      }
+    }
+
+    // --- Render Category Pills ---
+    function renderCategoryPills() {
+      const container = document.getElementById('categoryPills');
+      const list = ['All', 'Main Courses', 'Desserts', 'Drinks', 'Breakfast', 'Appetizers'];
+      
+      container.innerHTML = list.map(cat => {
+        const active = selectedCategory === cat;
+        const color = active 
+          ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/20' 
+          : 'bg-stone-200/50 text-stone-600 hover:bg-stone-200 hover:text-stone-900';
+        
+        return `
+          <button onclick="selectCategory('${cat}')" class="px-4.5 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${color}">
+            ${t('categories', cat)}
+          </button>
+        `;
+      }).join('');
+    }
+
+    // --- Render Slider featured elements ---
+    function renderFeaturedSlider() {
+      const featured = recipes.filter(r => r.featured);
+      if (featured.length === 0) {
+        document.getElementById('featuredSlider').classList.add('hidden');
+        return;
+      }
+      document.getElementById('featuredSlider').classList.remove('hidden');
+
+      const current = featured[sliderIndex];
+      document.getElementById('slideImage').src = current.image;
+      document.getElementById('slideImage').alt = current.title;
+      document.getElementById('slideTitle').textContent = getTransText(current.title, current.titleSi);
+      document.getElementById('slideDesc').textContent = getTransText(current.description, current.descriptionSi);
+      document.getElementById('slidePrep').textContent = current.prepTime;
+      document.getElementById('slideServings').textContent = current.servings;
+      document.getElementById('slideViewBtn').setAttribute('onclick', `viewRecipeDetails('${current._id}')`);
+    }
+
+    function rotateSlider(dir) {
+      const featured = recipes.filter(r => r.featured);
+      sliderIndex = (sliderIndex + dir + featured.length) % featured.length;
+      renderFeaturedSlider();
+    }
+
+    // --- Render Main Grid Feeds ---
+    function renderRecipesGrid() {
+      const container = document.getElementById('recipeGrid');
+      
+      // Filter
+      const filtered = recipes.filter(r => {
+        const catMatch = selectedCategory === 'All' || r.category === selectedCategory;
+        
+        const query = searchQuery.toLowerCase();
+        const searchMatch = !searchQuery || 
+          r.title.toLowerCase().includes(query) || 
+          (r.titleSi && r.titleSi.toLowerCase().includes(query)) ||
+          r.description.toLowerCase().includes(query) ||
+          (r.descriptionSi && r.descriptionSi.toLowerCase().includes(query)) ||
+          (r.ingredients && r.ingredients.join(' ').toLowerCase().includes(query)) ||
+          (r.ingredientsSi && r.ingredientsSi.join(' ').toLowerCase().includes(query)) ||
+          (r.instructions && r.instructions.join(' ').toLowerCase().includes(query)) ||
+          (r.instructionsSi && r.instructionsSi.join(' ').toLowerCase().includes(query));
+        
+        return catMatch && searchMatch;
+      });
+
+      updateSearchControls(filtered.length);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-1 sm:col-span-2 lg:col-span-3 bg-white rounded-2xl border border-stone-200 p-12 text-center max-w-md mx-auto shadow-sm mt-6">
+            <div class="bg-stone-100 text-stone-400 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="search" class="w-6 h-6"></i>
+            </div>
+            <h5 class="font-bold text-stone-800">${currentLang === 'si' ? 'වට්ටෝරු කිසිවක් හමු නොවිය' : 'No Recipes Found'}</h5>
+            <p class="text-stone-400 text-xs mt-1.5">${currentLang === 'si' ? 'කරුණාකර ඔබ ඇතුලත් කළ පදය වෙනස් කරන්න.' : 'Try adjusting your search parameters to find what you are looking for.'}</p>
+            <button onclick="clearAllFilters()" class="mt-4 bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-4 py-2 rounded-lg transition">Clear Filters</button>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = filtered.map((recipe, index) => {
+        const featuredStar = recipe.featured 
+          ? `<div class="absolute top-4 right-4 bg-amber-500 text-white p-1 rounded-full shadow-md"><i data-lucide="sparkles" class="w-4 h-4"></i></div>` 
+          : '';
+        
+        const cardHtml = `
+          <article onclick="viewRecipeDetails('${recipe._id}')" class="group bg-white rounded-2xl border border-stone-200/80 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer">
+            <div class="relative h-56 w-full overflow-hidden bg-stone-100">
+              <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+              <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-xs text-amber-950 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-xs">
+                ${getTransText(recipe.category, recipe.categorySi)}
+              </div>
+              ${featuredStar}
+            </div>
+
+            <div class="p-6 flex flex-col flex-grow">
+              <div class="flex items-center gap-3 text-[11px] text-stone-400 font-medium mb-2.5">
+                <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i>${recipe.prepTime}</span>
+                <span>•</span>
+                <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5"></i>${recipe.servings}</span>
+                <span>•</span>
+                <span class="bg-stone-100 text-stone-600 px-1.5 py-0.5 rounded font-semibold">${getTransText(recipe.difficulty, recipe.difficultySi)}</span>
+              </div>
+
+              <h4 class="text-xl font-bold text-stone-950 group-hover:text-amber-600 transition-colors line-clamp-1 serif-title mb-2">
+                ${getTransText(recipe.title, recipe.titleSi)}
+              </h4>
+              
+              <p class="text-stone-500 text-xs line-clamp-2 leading-relaxed mb-5 flex-grow">
+                ${getTransText(recipe.description, recipe.descriptionSi)}
+              </p>
+
+              <div class="border-t border-stone-100 pt-4 flex items-center justify-between">
+                <span class="text-amber-600 group-hover:text-amber-700 text-xs font-bold flex items-center gap-1 transition-colors">
+                  ${t('viewRecipe')} <i data-lucide="chevron-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"></i>
+                </span>
+                <span class="text-[10px] text-stone-400">${new Date(recipe.createdAt).toLocaleDateString()}</span>
+              </div>
+            </div>
+          </article>
+        `;
+
+        return cardHtml;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function clearAllFilters() {
+      searchQuery = '';
+      document.getElementById('searchInput').value = '';
+      selectedCategory = 'All';
+      renderLanguageUI();
+    }
+
+    // --- Single Recipe Page Render ---
+    function viewRecipeDetails(id) {
+      const recipe = recipes.find(r => r._id === id);
+      if (!recipe) return;
+
+      document.getElementById('detailsImage').src = recipe.image;
+      document.getElementById('detailsTitle').textContent = getTransText(recipe.title, recipe.titleSi);
+      document.getElementById('detailsCategory').textContent = getTransText(recipe.category, recipe.categorySi);
+      document.getElementById('detailsPrep').textContent = recipe.prepTime;
+      document.getElementById('detailsServings').textContent = recipe.servings;
+      document.getElementById('detailsDifficulty').textContent = getTransText(recipe.difficulty, recipe.difficultySi);
+      document.getElementById('detailsPublished').textContent = new Date(recipe.createdAt).toLocaleDateString();
+      document.getElementById('detailsDescription').textContent = `"${getTransText(recipe.description, recipe.descriptionSi)}"`;
+
+      // Ingredients List
+      const ingredients = recipe.ingredients || [];
+      const ingredientsSi = recipe.ingredientsSi || [];
+      const rawIng = getTransText(ingredients.join('\n'), ingredientsSi.join('\n')).split('\n').filter(Boolean);
+      
+      document.getElementById('detailsIngredientsList').innerHTML = rawIng.map(ing => {
+        return `
+          <label class="flex items-start gap-3 cursor-pointer py-1 group">
+            <input type="checkbox" class="mt-1 rounded border-stone-300 text-amber-600 focus:ring-amber-500/30 w-4 h-4 cursor-pointer">
+            <span class="text-sm text-stone-700 group-hover:text-stone-900 font-medium select-none">${ing}</span>
+          </label>
+        `;
+      }).join('');
+
+      // Preparation steps
+      const steps = recipe.instructions || [];
+      const stepsSi = recipe.instructionsSi || [];
+      const rawSteps = getTransText(steps.join('\n'), stepsSi.join('\n')).split('\n').filter(Boolean);
+
+      document.getElementById('detailsStepsList').innerHTML = rawSteps.map((step, index) => {
+        return `
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/10 text-amber-700 border border-amber-500/25 flex items-center justify-center font-bold text-sm">
+              ${index + 1}
+            </div>
+            <p class="text-stone-700 text-sm sm:text-base leading-relaxed pt-0.5">${step}</p>
+          </div>
+        `;
+      }).join('');
+
+      navigateTo('details');
+    }
+
+    // --- Render Admin Dashboard View ---
+    function renderAdminDashboard() {
+      document.getElementById('statTotalRecipes').textContent = recipes.length;
+      document.getElementById('statFeaturedRecipes').textContent = recipes.filter(r => r.featured).length;
+
+      const tbody = document.getElementById('recipesTableBody');
+      tbody.innerHTML = recipes.map(recipe => {
+        const featuredTag = recipe.featured 
+          ? `<span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-[9px] font-extrabold"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i>Yes</span>` 
+          : `<span class="text-stone-300">-</span>`;
+
+        return `
+          <tr class="hover:bg-stone-50/50 transition-colors">
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-4">
+                <img src="${recipe.image}" alt="" class="w-12 h-12 object-cover rounded-xl border border-stone-200">
+                <div>
+                  <span class="font-bold text-stone-900 block">${recipe.title}</span>
+                  <span class="text-[10px] text-stone-400 block">${recipe.titleSi || 'නොමැත'}</span>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <span class="inline-block bg-stone-100 text-stone-800 px-2.5 py-1 rounded-full text-[11px] font-bold">${recipe.category}</span>
+            </td>
+            <td class="px-6 py-4 text-stone-500">${recipe.prepTime} • ${recipe.servings}</td>
+            <td class="px-6 py-4 text-center">${featuredTag}</td>
+            <td class="px-6 py-4 text-right">
+              <div class="inline-flex items-center gap-2">
+                <button onclick="openEditRecipeModal('${recipe._id}')" class="p-2 rounded-lg hover:bg-amber-50 hover:text-amber-700 text-stone-400 transition" title="Edit Recipe">
+                  <i data-lucide="edit" class="w-4 h-4"></i>
+                </button>
+                <button onclick="openDeleteConfirmModal('${recipe._id}')" class="p-2 rounded-lg hover:bg-red-50 hover:text-red-600 text-stone-400 transition" title="Delete Recipe">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      populatePagesEditor();
+      lucide.createIcons();
+    }
+
+    // --- Local File Image Upload Converter ---
+    let uploadedBase64Image = null;
+
+    function handleLocalImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Show file name
+      document.getElementById('formImageFileName').textContent = file.name;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        uploadedBase64Image = e.target.result;
+        
+        // Populate preview
+        const previewContainer = document.getElementById('formImagePreviewContainer');
+        const previewImg = document.getElementById('formImagePreview');
+        
+        previewImg.src = uploadedBase64Image;
+        previewContainer.classList.remove('hidden');
+        previewContainer.classList.add('flex');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // --- Add / Edit Recipe Modals ---
+    function openAddRecipeModal() {
+      document.getElementById('addEditModalTitle').textContent = currentLang === 'si' ? 'නව වට්ටෝරුවක් එක් කරන්න' : 'Add New Recipe';
+      document.getElementById('formRecipeId').value = '';
+      document.getElementById('formTitle').value = '';
+      document.getElementById('formTitleSi').value = '';
+      document.getElementById('formDescription').value = '';
+      document.getElementById('formDescriptionSi').value = '';
+      document.getElementById('formCategory').value = 'Main Courses';
+      document.getElementById('formCategorySi').value = 'ප්‍රධාන ආහාර වේල්';
+      document.getElementById('formImage').value = '';
+      
+      // Reset file upload state
+      uploadedBase64Image = null;
+      document.getElementById('formImageFile').value = '';
+      document.getElementById('formImageFileName').textContent = 'No file chosen';
+      document.getElementById('formImagePreviewContainer').classList.add('hidden');
+      document.getElementById('formImagePreviewContainer').classList.remove('flex');
+
+      document.getElementById('formPrepTime').value = '30 mins';
+      document.getElementById('formServings').value = '4 servings';
+      document.getElementById('formDifficulty').value = 'Easy';
+      document.getElementById('formDifficultySi').value = 'පහසු';
+      document.getElementById('formFeatured').checked = false;
+      document.getElementById('formIngredients').value = '';
+      document.getElementById('formIngredientsSi').value = '';
+      document.getElementById('formInstructions').value = '';
+      document.getElementById('formInstructionsSi').value = '';
+
+      document.getElementById('addEditModal').classList.remove('hidden');
+      document.getElementById('addEditModal').classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function openEditRecipeModal(id) {
+      const recipe = recipes.find(r => r._id === id);
+      if (!recipe) return;
+
+      document.getElementById('addEditModalTitle').textContent = currentLang === 'si' ? 'වට්ටෝරුව සංස්කරණය කරන්න' : 'Edit Recipe';
+      document.getElementById('formRecipeId').value = recipe._id;
+      document.getElementById('formTitle').value = recipe.title;
+      document.getElementById('formTitleSi').value = recipe.titleSi || '';
+      document.getElementById('formDescription').value = recipe.description;
+      document.getElementById('formDescriptionSi').value = recipe.descriptionSi || '';
+      document.getElementById('formCategory').value = recipe.category;
+      document.getElementById('formCategorySi').value = recipe.categorySi || 'ප්‍රධාන ආහාර වේල්';
+      
+      // Set paste URL value
+      document.getElementById('formImage').value = recipe.image.startsWith('data:') ? '' : recipe.image;
+      
+      // Setup Image Upload Preview values
+      uploadedBase64Image = recipe.image.startsWith('data:') ? recipe.image : null;
+      document.getElementById('formImageFile').value = '';
+      document.getElementById('formImageFileName').textContent = recipe.image.startsWith('data:') ? 'Loaded uploaded image' : 'No file chosen';
+      
+      const previewContainer = document.getElementById('formImagePreviewContainer');
+      const previewImg = document.getElementById('formImagePreview');
+      previewImg.src = recipe.image;
+      previewContainer.classList.remove('hidden');
+      previewContainer.classList.add('flex');
+
+      document.getElementById('formPrepTime').value = recipe.prepTime;
+      document.getElementById('formServings').value = recipe.servings;
+      document.getElementById('formDifficulty').value = recipe.difficulty;
+      document.getElementById('formDifficultySi').value = recipe.difficultySi || 'පහසු';
+      document.getElementById('formFeatured').checked = recipe.featured || false;
+      document.getElementById('formIngredients').value = (recipe.ingredients || []).join('\n');
+      document.getElementById('formIngredientsSi').value = (recipe.ingredientsSi || []).join('\n');
+      document.getElementById('formInstructions').value = (recipe.instructions || []).join('\n');
+      document.getElementById('formInstructionsSi').value = (recipe.instructionsSi || []).join('\n');
+
+      document.getElementById('addEditModal').classList.remove('hidden');
+      document.getElementById('addEditModal').classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeAddRecipeModal() {
+      document.getElementById('addEditModal').classList.add('hidden');
+      document.getElementById('addEditModal').classList.remove('flex');
+    }
+
+    // --- Save Recipe Submission ---
+    function submitSaveRecipe(e) {
+      e.preventDefault();
+      const id = document.getElementById('formRecipeId').value;
+
+      // Choose uploaded file first, else fallback to pasted URL, else default fallback image
+      const finalImage = uploadedBase64Image || 
+                         document.getElementById('formImage').value.trim() || 
+                         'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=800&q=80';
+
+      const recipeData = {
+        title: document.getElementById('formTitle').value.trim(),
+        titleSi: document.getElementById('formTitleSi').value.trim(),
+        description: document.getElementById('formDescription').value.trim(),
+        descriptionSi: document.getElementById('formDescriptionSi').value.trim(),
+        category: document.getElementById('formCategory').value,
+        categorySi: document.getElementById('formCategorySi').value.trim(),
+        image: finalImage,
+        prepTime: document.getElementById('formPrepTime').value.trim(),
+        servings: document.getElementById('formServings').value.trim(),
+        difficulty: document.getElementById('formDifficulty').value,
+        difficultySi: document.getElementById('formDifficultySi').value.trim() || 'පහසු',
+        featured: document.getElementById('formFeatured').checked,
+        ingredients: document.getElementById('formIngredients').value.split('\n').map(x => x.trim()).filter(Boolean),
+        ingredientsSi: document.getElementById('formIngredientsSi').value.split('\n').map(x => x.trim()).filter(Boolean),
+        instructions: document.getElementById('formInstructions').value.split('\n').map(x => x.trim()).filter(Boolean),
+        instructionsSi: document.getElementById('formInstructionsSi').value.split('\n').map(x => x.trim()).filter(Boolean),
+      };
+
+      if (id) {
+        // Update
+        const index = recipes.findIndex(r => r._id === id);
+        if (index !== -1) {
+          recipes[index] = { ...recipes[index], ...recipeData };
+        }
+      } else {
+        // Create
+        const newRecipe = {
+          ...recipeData,
+          _id: 'rec_' + Math.random().toString(36).substr(2, 9),
+          createdAt: new Date().toISOString()
+        };
+        recipes.unshift(newRecipe);
+      }
+
+      saveRecipesDb();
+      closeAddRecipeModal();
+      
+      // Reload feeds and tables
+      renderRecipesGrid();
+      renderFeaturedSlider();
+      renderAdminDashboard();
+    }
+
+    // --- Delete Confirmation Popup ---
+    function openDeleteConfirmModal(id) {
+      const recipe = recipes.find(r => r._id === id);
+      if (!recipe) return;
+
+      recipeToDeleteId = id;
+      document.getElementById('deleteConfirmImage').src = recipe.image;
+      document.getElementById('deleteConfirmTitle').textContent = recipe.title;
+      document.getElementById('deleteConfirmMeta').textContent = `${recipe.category} • ${recipe.prepTime}`;
+
+      document.getElementById('deleteConfirmModal').classList.remove('hidden');
+      document.getElementById('deleteConfirmModal').classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteConfirmModal').classList.add('hidden');
+      document.getElementById('deleteConfirmModal').classList.remove('flex');
+      recipeToDeleteId = null;
+    }
+
+    function executeDeleteRecipe() {
+      if (!recipeToDeleteId) return;
+      
+      recipes = recipes.filter(r => r._id !== recipeToDeleteId);
+      saveRecipesDb();
+      closeDeleteModal();
+
+      // Refresh feeds & tables
+      renderRecipesGrid();
+      renderFeaturedSlider();
+      renderAdminDashboard();
+    }
+
+    // --- Startup Load Operations ---
+    window.addEventListener('DOMContentLoaded', () => {
+      initDb();
+      
+      // Check Cookie Policy status
+      if (localStorage.getItem('cookverse_cookie_consent') !== 'true') {
+        document.getElementById('cookieConsentBanner').classList.remove('hidden');
+      }
+
+      // Render Active session status on Navbar (Both Admin & Normal Users)
+      updateAuthUI();
+
+      // Set initial UI values
+      renderLanguageUI();
+
+      // Secret logo doorway binding
+      document.getElementById('logoBtn').addEventListener('dblclick', handleSecretTrigger);
+    });
+
+  </script>
+</body>
+</html>
