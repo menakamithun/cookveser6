@@ -1,19 +1,62 @@
-<html>
-    <head>
-        <title>Admin Page</title>
-    </head>
-    <body>
-        <h1>Admin Dashboard</h1>
-        <p>Welcome, Admin!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cook Verse | Premium Recipes & Food Blog</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-        <!-- Secret Access Door Alert Banner -->
-        <div id="secretAlert" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-amber-950 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-amber-500/20 hidden">
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #fafaf9;
+      color: #292524;
+    }
+    .serif-title {
+      font-family: 'Playfair Display', Georgia, Cambria, serif;
+    }
+    /* Hide scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body>
+    
+    <!-- Secret Access Door Alert Banner -->
+    <div id="secretAlert" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-amber-950 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-amber-500/20 hidden">
             <i data-lucide="lock" class="w-6 h-6 text-amber-500 animate-pulse"></i>
             <div>
             <span class="font-extrabold text-sm block id-secret-title">Secret Admin Portal Unlocked!</span>
             <span class="text-stone-300 text-xs id-secret-desc">Redirecting you to admin login...</span>
             </div>
-        </div>
+    </div>
 
-    </body>
+</body>
 </html>
